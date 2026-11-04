@@ -45,8 +45,8 @@ gen/
 /.nb-gradle/
 
 ### Java / Maven: build output ###
+# 注：不忽略 build/——前端工程根下的 Vite 构建脚本目录（pure-admin 的 build/plugins.ts 等）需入库；Java 产物忽略 target/ 即可
 target/
-build/
 dist/
 
 ### Java / Maven: compiled artifacts ###
@@ -116,6 +116,15 @@ CLAUDE.md
 mvnw
 mvnw.cmd
 .mvn/
+
+### Skill 工具临时目录（如 baibao 命令运行时产物）###
+.baibao
+
+### pure-admin（Vite/pnpm/husky）增补 ###
+report.html
+vite.config.*.timestamp*
+.pnpm-error.log*
+.husky/_/
 
 
 

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+[ -n "$CI" ] && exit 0
+
+# 通过 .lintstagedrc 对暂存区文件执行 prettier/eslint/stylelint 自动修复
+pnpm exec lint-staged

@@ -1,99 +1,181 @@
+<script setup lang="ts">
+import Motion from "./utils/motion";
+import { useRouter } from "vue-router";
+import { message } from "@/utils/message";
+import { loginRules } from "./utils/rule";
+import { ref, reactive, toRaw } from "vue";
+import { debounce } from "@pureadmin/utils";
+import { useNav } from "@/layout/hooks/useNav";
+import { useEventListener } from "@vueuse/core";
+import type { FormInstance } from "element-plus";
+import { useLayout } from "@/layout/hooks/useLayout";
+import { useUserStoreHook } from "@/store/modules/user";
+import { initRouter, getTopMenu } from "@/router/utils";
+import { bg, avatar, illustration } from "./utils/static";
+import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
+
+import dayIcon from "@/assets/svg/day.svg?component";
+import darkIcon from "@/assets/svg/dark.svg?component";
+import Lock from "~icons/ri/lock-fill";
+import User from "~icons/ri/user-3-fill";
+
+defineOptions({
+  name: "Login"
+});
+
+const router = useRouter();
+const loading = ref(false);
+const disabled = ref(false);
+const ruleFormRef = ref<FormInstance>();
+
+const { initStorage } = useLayout();
+initStorage();
+
+const { dataTheme, overallStyle, dataThemeChange } = useDataThemeChange();
+dataThemeChange(overallStyle.value);
+const { title } = useNav();
+
+const ruleForm = reactive({
+  account: "admin",
+  password: "admin123"
+});
+
+const onLogin = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+  await formEl.validate(valid => {
+    if (valid) {
+      loading.value = true;
+      useUserStoreHook()
+        .loginByUsername({
+          account: ruleForm.account,
+          password: ruleForm.password
+        })
+        .then(() => {
+          // 获取后端路由（失败提示已由 http 层统一弹出，此处不再重复）
+          return initRouter().then(() => {
+            disabled.value = true;
+            router
+              .push(getTopMenu(true).path)
+              .then(() => {
+                message("登录成功", { type: "success" });
+              })
+              .finally(() => (disabled.value = false));
+          });
+        })
+        .finally(() => (loading.value = false));
+    }
+  });
+};
+
+const immediateDebounce: any = debounce(
+  formRef => onLogin(formRef),
+  1000,
+  true
+);
+
+useEventListener(document, "keydown", ({ code }) => {
+  if (
+    ["Enter", "NumpadEnter"].includes(code) &&
+    !disabled.value &&
+    !loading.value
+  )
+    immediateDebounce(ruleFormRef.value);
+});
+</script>
+
 <template>
-  <div class="login-page">
-    <el-card class="login-card">
-      <div class="login-title">壶天</div>
-      <div class="login-sub">壶里乾坤大，炉中日月长</div>
-      <el-form ref="formRef" :model="form" :rules="rules" size="large" @keyup.enter="handleLogin">
-        <el-form-item prop="username">
-          <el-input v-model="form.username" placeholder="用户名" :prefix-icon="User" clearable />
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input v-model="form.password" type="password" placeholder="密码" :prefix-icon="Lock" show-password />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" class="login-btn" :loading="loading" @click="handleLogin">登 录</el-button>
-        </el-form-item>
-      </el-form>
-      <div class="login-tip">骨架账号：admin / 123456</div>
-    </el-card>
+  <div class="select-none">
+    <img :src="bg" class="wave" />
+    <div class="flex-c absolute right-5 top-3">
+      <!-- 主题 -->
+      <el-switch
+        v-model="dataTheme"
+        inline-prompt
+        :active-icon="dayIcon"
+        :inactive-icon="darkIcon"
+        @change="dataThemeChange"
+      />
+    </div>
+    <div class="login-container">
+      <div class="img">
+        <component :is="toRaw(illustration)" />
+      </div>
+      <div class="login-box">
+        <div class="login-form">
+          <avatar class="avatar" />
+          <Motion>
+            <h2 class="outline-hidden">{{ title }}</h2>
+          </Motion>
+          <Motion :delay="50">
+            <p class="mb-4! mt-1! text-sm text-gray-400">
+              壶里乾坤大，炉中日月长
+            </p>
+          </Motion>
+
+          <el-form
+            ref="ruleFormRef"
+            :model="ruleForm"
+            :rules="loginRules"
+            size="large"
+          >
+            <Motion :delay="100">
+              <el-form-item
+                :rules="[
+                  {
+                    required: true,
+                    message: '请输入账号',
+                    trigger: 'blur'
+                  }
+                ]"
+                prop="account"
+              >
+                <el-input
+                  v-model="ruleForm.account"
+                  clearable
+                  placeholder="账号"
+                  :prefix-icon="useRenderIcon(User)"
+                />
+              </el-form-item>
+            </Motion>
+
+            <Motion :delay="150">
+              <el-form-item prop="password">
+                <el-input
+                  v-model="ruleForm.password"
+                  clearable
+                  show-password
+                  placeholder="密码"
+                  :prefix-icon="useRenderIcon(Lock)"
+                />
+              </el-form-item>
+            </Motion>
+
+            <Motion :delay="250">
+              <el-button
+                class="w-full mt-4!"
+                size="default"
+                type="primary"
+                :loading="loading"
+                :disabled="disabled"
+                @click="onLogin(ruleFormRef)"
+              >
+                登录
+              </el-button>
+            </Motion>
+          </el-form>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { User, Lock } from '@element-plus/icons-vue'
-import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
-import { loginApi } from '@/api/auth'
-import { setToken } from '@/utils/cache'
-import { useUserStore } from '@/store/user'
+<style scoped>
+@import url("@/style/login.css");
+</style>
 
-const router = useRouter()
-const userStore = useUserStore()
-const formRef = ref<FormInstance>()
-const loading = ref(false)
-
-const form = reactive({
-  username: 'admin',
-  password: '123456',
-})
-
-const rules: FormRules = {
-  username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-  password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-}
-
-async function handleLogin() {
-  const valid = await formRef.value?.validate().catch(() => false)
-  if (!valid) return
-  loading.value = true
-  try {
-    const res = await loginApi({ username: form.username, password: form.password })
-    setToken(res.data.token)
-    userStore.setUser({ username: res.data.username, nickname: res.data.nickname })
-    ElMessage.success('欢迎来到壶天')
-    router.push('/')
-  } finally {
-    loading.value = false
-  }
-}
-</script>
-
-<style scoped lang="scss">
-.login-page {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  background: linear-gradient(135deg, #1f2d3d 0%, #2b4d6f 50%, #3a7ca5 100%);
-}
-
-.login-card {
-  width: 380px;
-  padding: 12px 8px;
-}
-
-.login-title {
-  font-size: 28px;
-  font-weight: 700;
-  text-align: center;
-  color: #303133;
-}
-
-.login-sub {
-  margin: 8px 0 24px;
-  font-size: 13px;
-  text-align: center;
-  color: #909399;
-}
-
-.login-btn {
-  width: 100%;
-}
-
-.login-tip {
-  font-size: 12px;
-  text-align: center;
-  color: #c0c4cc;
+<style lang="scss" scoped>
+:deep(.el-input-group__append, .el-input-group__prepend) {
+  padding: 0;
 }
 </style>
