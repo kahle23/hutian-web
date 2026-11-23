@@ -6,7 +6,7 @@ import {
   isNumber,
   isFunction,
   useResizeObserver
-} from "@pureadmin/utils";
+} from "@/utils/ht-utils";
 import {
   type PropType,
   h,

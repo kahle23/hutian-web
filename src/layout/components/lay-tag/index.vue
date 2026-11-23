@@ -16,7 +16,7 @@ import {
   isEqual,
   isAllEmpty,
   useResizeObserver
-} from "@pureadmin/utils";
+} from "@/utils/ht-utils";
 
 import ExitFullscreen from "~icons/ri/fullscreen-exit-fill";
 import Fullscreen from "~icons/ri/fullscreen-fill";

@@ -16,9 +16,9 @@ import {
 } from "@/api/system";
 import { addDialog } from "@/components/ReDialog";
 import type { FormItemProps } from "../utils/types";
-import type { PaginationProps } from "@pureadmin/table";
+import type { PaginationProps } from "@/components/HTable";
 import { ElMessageBox } from "element-plus";
-import { deviceDetection } from "@pureadmin/utils";
+import { deviceDetection } from "@/utils/ht-utils";
 import { reactive, ref, onMounted, h } from "vue";
 
 export function useUser() {

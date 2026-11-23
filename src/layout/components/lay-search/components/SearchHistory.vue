@@ -3,7 +3,7 @@ import Sortable from "sortablejs";
 import SearchHistoryItem from "./SearchHistoryItem.vue";
 import type { optionsItem, dragItem, Props } from "../types";
 import { useEpThemeStoreHook } from "@/store/modules/epTheme";
-import { useResizeObserver, isArray, delay } from "@pureadmin/utils";
+import { useResizeObserver, isArray, delay } from "@/utils/ht-utils";
 import { ref, watch, nextTick, computed, getCurrentInstance } from "vue";
 
 interface Emits {

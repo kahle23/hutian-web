@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { readdir, stat } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { sum, formatBytes } from "@pureadmin/utils";
+import { sum, formatBytes } from "../src/utils/ht-utils";
 import {
   name,
   version,

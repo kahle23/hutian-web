@@ -6,8 +6,8 @@ import {
   type ChangeLogItem
 } from "@/api/basic";
 import { addDialog } from "@/components/ReDialog";
-import type { PaginationProps } from "@pureadmin/table";
-import { deviceDetection } from "@pureadmin/utils";
+import type { PaginationProps } from "@/components/HTable";
+import { deviceDetection } from "@/utils/ht-utils";
 import { reactive, ref, onMounted, h } from "vue";
 
 export function useChangeLog() {

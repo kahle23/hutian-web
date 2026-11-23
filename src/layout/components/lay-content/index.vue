@@ -2,7 +2,7 @@
 import LayFrame from "../lay-frame/index.vue";
 import LayFooter from "../lay-footer/index.vue";
 import { useTags } from "@/layout/hooks/useTag";
-import { useGlobal, isNumber } from "@pureadmin/utils";
+import { useGlobal, isNumber } from "@/utils/ht-utils";
 import BackTopIcon from "@/assets/svg/back_top.svg?component";
 import { h, computed, Transition, defineComponent } from "vue";
 import { usePermissionStoreHook } from "@/store/modules/permission";

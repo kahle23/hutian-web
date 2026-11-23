@@ -20,7 +20,7 @@ import type { ArticleSearchForm, ArticleSelection } from "./types";
 import { reactive, ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessageBox } from "element-plus";
-import type { PaginationProps } from "@pureadmin/table";
+import type { PaginationProps } from "@/components/HTable";
 
 export function useArticle() {
   const router = useRouter();

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useGlobal } from "@pureadmin/utils";
+import { useGlobal } from "@/utils/ht-utils";
 import { useNav } from "@/layout/hooks/useNav";
 
 import MenuFold from "~icons/ri/menu-fold-fill";

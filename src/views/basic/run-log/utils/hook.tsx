@@ -2,8 +2,8 @@ import detailComp from "../detail.vue";
 import { message } from "@/utils/message";
 import { getRunLogPage, deleteRunLogs, type RunLogItem } from "@/api/basic";
 import { addDialog } from "@/components/ReDialog";
-import type { PaginationProps } from "@pureadmin/table";
-import { deviceDetection } from "@pureadmin/utils";
+import type { PaginationProps } from "@/components/HTable";
+import { deviceDetection } from "@/utils/ht-utils";
 import { reactive, ref, onMounted, h } from "vue";
 
 export function useRunLog() {

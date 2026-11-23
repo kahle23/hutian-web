@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import { useUserStoreHook } from "@/store/modules/user";
-import { storageLocal, isString, isIncludeAllChildren } from "@pureadmin/utils";
+import { storageLocal, isString, isIncludeAllChildren } from "@/utils/ht-utils";
 
 export interface DataInfo<T> {
   /** 后端 JWT 裸 token（Authorization 头直传，无 Bearer 前缀） */

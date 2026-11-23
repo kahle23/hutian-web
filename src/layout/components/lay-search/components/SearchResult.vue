@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Props } from "../types";
-import { useResizeObserver } from "@pureadmin/utils";
+import { useResizeObserver } from "@/utils/ht-utils";
 import { useEpThemeStoreHook } from "@/store/modules/epTheme";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { ref, computed, getCurrentInstance, onMounted } from "vue";

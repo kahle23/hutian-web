@@ -13,8 +13,8 @@ import type { CategoryFormItem, CategorySearchForm } from "./types";
 import editForm from "../form.vue";
 import { addDialog } from "@/components/ReDialog";
 import { reactive, ref, onMounted, h } from "vue";
-import type { PaginationProps } from "@pureadmin/table";
-import { deviceDetection } from "@pureadmin/utils";
+import type { PaginationProps } from "@/components/HTable";
+import { deviceDetection } from "@/utils/ht-utils";
 
 export function useCategory() {
   const form = reactive<CategorySearchForm>({

@@ -15,7 +15,7 @@ import {
   intersection,
   storageLocal,
   isIncludeAllChildren
-} from "@pureadmin/utils";
+} from "@/utils/ht-utils";
 import { getConfig } from "@/config";
 import { buildHierarchyTree } from "@/utils/tree";
 import { userKey, type DataInfo } from "@/utils/auth";

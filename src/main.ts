@@ -8,7 +8,7 @@ import { createApp, type Directive } from "vue";
 import { useElementPlus } from "@/plugins/elementPlus";
 import { injectResponsiveStorage } from "@/utils/responsive";
 
-import Table from "@pureadmin/table";
+import HTable from "@/components/HTable";
 
 // 引入重置样式
 import "./style/reset.scss";
@@ -56,7 +56,7 @@ getPlatformConfig(app).then(async config => {
   app.use(router);
   await router.isReady();
   injectResponsiveStorage(app, config);
-  app.use(MotionPlugin).use(useElementPlus).use(Table);
+  app.use(MotionPlugin).use(useElementPlus).use(HTable);
   // .use(useEcharts);
   app.mount("#app");
 });

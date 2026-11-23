@@ -94,7 +94,7 @@ const {
 
     <PureTableBar title="异步任务" :columns="columns" @refresh="onSearch">
       <template v-slot="{ size, dynamicColumns }">
-        <pure-table
+        <ht-table
           ref="tableRef"
           adaptive
           :adaptiveConfig="{ offsetBottom: 108 }"
@@ -126,7 +126,7 @@ const {
               详情
             </el-button>
           </template>
-        </pure-table>
+        </ht-table>
       </template>
     </PureTableBar>
   </div>

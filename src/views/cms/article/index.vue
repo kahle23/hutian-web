@@ -156,7 +156,7 @@ const {
             {{ item.label }}
           </el-radio-button>
         </el-radio-group>
-        <pure-table
+        <ht-table
           ref="tableRef"
           adaptive
           :adaptiveConfig="{ offsetBottom: 148 }"
@@ -237,7 +237,7 @@ const {
               </template>
             </el-dropdown>
           </template>
-        </pure-table>
+        </ht-table>
       </template>
     </PureTableBar>
   </div>

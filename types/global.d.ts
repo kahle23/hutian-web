@@ -1,5 +1,5 @@
 import type { ECharts } from "echarts";
-import type { TableColumns } from "@pureadmin/table";
+import type { TableColumns } from "@/components/HTable";
 
 /**
  * 全局类型声明，无需引入直接在 `.vue` 、`.ts` 、`.tsx` 文件使用即可获得类型提示
@@ -72,7 +72,7 @@ declare global {
   }
 
   /**
-   *  继承 `@pureadmin/table` 的 `TableColumns` ，方便全局直接调用
+   *  继承 `@/components/HTable` 的 `TableColumns` ，方便全局直接调用
    */
   type TableColumnList = Array<TableColumns>;
 

@@ -21,7 +21,7 @@ import {
   useGlobal,
   deviceDetection,
   useResizeObserver
-} from "@pureadmin/utils";
+} from "@/utils/ht-utils";
 
 import LayTag from "./components/lay-tag/index.vue";
 import LayNavbar from "./components/lay-navbar/index.vue";

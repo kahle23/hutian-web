@@ -81,7 +81,7 @@ const {
 
     <PureTableBar title="运行日志" :columns="columns" @refresh="onSearch">
       <template v-slot="{ size, dynamicColumns }">
-        <pure-table
+        <ht-table
           ref="tableRef"
           adaptive
           :adaptiveConfig="{ offsetBottom: 108 }"
@@ -129,7 +129,7 @@ const {
               </template>
             </el-popconfirm>
           </template>
-        </pure-table>
+        </ht-table>
       </template>
     </PureTableBar>
   </div>

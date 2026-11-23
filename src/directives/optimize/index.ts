@@ -4,7 +4,7 @@ import {
   debounce,
   isObject,
   isFunction
-} from "@pureadmin/utils";
+} from "@/utils/ht-utils";
 import { useEventListener } from "@vueuse/core";
 import type { Directive, DirectiveBinding } from "vue";
 

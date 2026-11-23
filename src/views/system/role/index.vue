@@ -8,7 +8,7 @@ import {
   subBefore,
   deviceDetection,
   useResizeObserver
-} from "@pureadmin/utils";
+} from "@/utils/ht-utils";
 
 import Delete from "~icons/ep/delete";
 import EditPen from "~icons/ep/edit-pen";
@@ -141,7 +141,7 @@ onMounted(() => {
           </el-button>
         </template>
         <template v-slot="{ size, dynamicColumns }">
-          <pure-table
+          <ht-table
             ref="tableRef"
             align-whole="center"
             showOverflowTooltip
@@ -199,7 +199,7 @@ onMounted(() => {
                 权限
               </el-button>
             </template>
-          </pure-table>
+          </ht-table>
         </template>
       </PureTableBar>
 

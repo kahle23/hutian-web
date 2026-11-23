@@ -81,7 +81,7 @@ function onFullscreen() {
         </el-button>
       </template>
       <template v-slot="{ size, dynamicColumns }">
-        <pure-table
+        <ht-table
           ref="tableRef"
           adaptive
           :adaptiveConfig="{ offsetBottom: 45 }"
@@ -138,7 +138,7 @@ function onFullscreen() {
               </template>
             </el-popconfirm>
           </template>
-        </pure-table>
+        </ht-table>
       </template>
     </PureTableBar>
   </div>

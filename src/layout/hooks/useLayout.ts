@@ -1,6 +1,6 @@
 import { computed } from "vue";
 import { routerArrays } from "../types";
-import { useGlobal } from "@pureadmin/utils";
+import { useGlobal } from "@/utils/ht-utils";
 import { useMultiTagsStore } from "@/store/modules/multiTags";
 
 export function useLayout() {
@@ -21,7 +21,7 @@ export function useLayout() {
         theme: $config?.Theme ?? "light",
         darkMode: $config?.DarkMode ?? false,
         sidebarStatus: $config?.SidebarStatus ?? true,
-        epThemeColor: $config?.EpThemeColor ?? "#409EFF",
+        epThemeColor: $config?.EpThemeColor ?? "#0d9488",
         themeColor: $config?.Theme ?? "light",
         overallStyle: $config?.OverallStyle ?? "light"
       };
