@@ -28,7 +28,7 @@ const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
 
 // 动态路由
 import { getAsyncRoutes } from "@/api/routes";
-import { toPureRoutes } from "./menu";
+import { toHtRoutes } from "./menu";
 
 function handRank(routeInfo: any) {
   const { name, path, parentId, meta } = routeInfo;
@@ -212,7 +212,7 @@ function initRouter() {
     } else {
       return new Promise(resolve => {
         getAsyncRoutes().then(menus => {
-          const routeList = toPureRoutes(menus ?? []);
+          const routeList = toHtRoutes(menus ?? []);
           handleAsyncRoutes(cloneDeep(routeList));
           storageLocal().setItem(key, routeList);
           resolve(router);
@@ -222,7 +222,7 @@ function initRouter() {
   } else {
     return new Promise(resolve => {
       getAsyncRoutes().then(menus => {
-        handleAsyncRoutes(cloneDeep(toPureRoutes(menus ?? [])));
+        handleAsyncRoutes(cloneDeep(toHtRoutes(menus ?? [])));
         resolve(router);
       });
     });

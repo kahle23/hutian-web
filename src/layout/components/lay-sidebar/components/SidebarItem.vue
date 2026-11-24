@@ -2,11 +2,11 @@
 import { getConfig } from "@/config";
 import { posix } from "path-browserify";
 import { menuType } from "@/layout/types";
-import { ReText } from "@/components/ReText";
+import { HtText } from "@/components/HtText";
 import { useNav } from "@/layout/hooks/useNav";
 import SidebarLinkItem from "./SidebarLinkItem.vue";
 import SidebarExtraIcon from "./SidebarExtraIcon.vue";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { useRenderIcon } from "@/components/HtIcon/src/hooks";
 import {
   type PropType,
   type CSSProperties,
@@ -165,7 +165,7 @@ function resolvePath(routePath) {
 
       <template #title>
         <div :style="getDivStyle">
-          <ReText
+          <HtText
             :tippyProps="{
               offset: [0, -10],
               theme: tooltipEffect
@@ -173,7 +173,7 @@ function resolvePath(routePath) {
             class="w-full! text-inherit!"
           >
             {{ onlyOneChild.meta.title }}
-          </ReText>
+          </HtText>
           <SidebarExtraIcon :extraIcon="onlyOneChild.meta.extraIcon" />
         </div>
       </template>
@@ -194,7 +194,7 @@ function resolvePath(routePath) {
       >
         <component :is="useRenderIcon(item.meta && toRaw(item.meta.icon))" />
       </div>
-      <ReText
+      <HtText
         v-if="
           layout === 'mix' && toRaw(item.meta.icon)
             ? !isCollapse || item?.pathList?.length !== 2
@@ -212,7 +212,7 @@ function resolvePath(routePath) {
         :class="textClass"
       >
         {{ item.meta.title }}
-      </ReText>
+      </HtText>
       <SidebarExtraIcon v-if="!isCollapse" :extraIcon="item.meta.extraIcon" />
     </template>
 

@@ -22,7 +22,7 @@ const showLogo = ref(
 
 const {
   device,
-  pureApp,
+  appStore,
   isCollapse,
   tooltipEffect,
   menuSelect,
@@ -32,13 +32,13 @@ const {
 const subMenuData = ref([]);
 
 const menuData = computed(() => {
-  return pureApp.layout === "mix" && device.value !== "mobile"
+  return appStore.layout === "mix" && device.value !== "mobile"
     ? subMenuData.value
     : usePermissionStoreHook().wholeMenus;
 });
 
 const loading = computed(() =>
-  pureApp.layout === "mix" ? false : menuData.value.length === 0 ? true : false
+  appStore.layout === "mix" ? false : menuData.value.length === 0 ? true : false
 );
 
 const defaultActive = computed(() =>
@@ -101,7 +101,7 @@ onBeforeUnmount(() => {
       <el-menu
         unique-opened
         mode="vertical"
-        popper-class="pure-scrollbar"
+        popper-class="ht-scrollbar"
         class="outer-most select-none"
         :collapse="isCollapse"
         :collapse-transition="false"
@@ -119,12 +119,12 @@ onBeforeUnmount(() => {
     </el-scrollbar>
     <LaySidebarCenterCollapse
       v-if="device !== 'mobile' && (isShow || isCollapse)"
-      :is-active="pureApp.sidebar.opened"
+      :is-active="appStore.sidebar.opened"
       @toggleClick="toggleSideBar"
     />
     <LaySidebarLeftCollapse
       v-if="device !== 'mobile'"
-      :is-active="pureApp.sidebar.opened"
+      :is-active="appStore.sidebar.opened"
       @toggleClick="toggleSideBar"
     />
   </div>

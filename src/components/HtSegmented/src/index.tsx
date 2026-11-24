@@ -1,6 +1,6 @@
 import "./index.css";
 import type { OptionsType } from "./type";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { useRenderIcon } from "@/components/HtIcon/src/hooks";
 import {
   useDark,
   isNumber,
@@ -51,7 +51,7 @@ const props = {
 };
 
 export default defineComponent({
-  name: "ReSegmented",
+  name: "HtSegmented",
   props,
   emits: ["change", "update:modelValue"],
   setup(props, { emit }) {
@@ -106,7 +106,7 @@ export default defineComponent({
     }
 
     function handleResizeInit() {
-      useResizeObserver(".pure-segmented", () => {
+      useResizeObserver(".ht-segmented", () => {
         nextTick(() => {
           handleInit(curIndex.value);
         });
@@ -137,9 +137,9 @@ export default defineComponent({
           <label
             ref={`labelRef${index}`}
             class={[
-              "pure-segmented-item",
+              "ht-segmented-item",
               (props.disabled || option?.disabled) &&
-                "pure-segmented-item-disabled"
+                "ht-segmented-item-disabled"
             ]}
             style={{
               background:
@@ -159,7 +159,7 @@ export default defineComponent({
           >
             <input type="radio" name="segmented" />
             <div
-              class="pure-segmented-item-label"
+              class="ht-segmented-item-label"
               v-tippy={{
                 content: option?.tip,
                 zIndex: 41000
@@ -167,7 +167,7 @@ export default defineComponent({
             >
               {option.icon && !isFunction(option.label) ? (
                 <span
-                  class="pure-segmented-item-icon"
+                  class="ht-segmented-item-icon"
                   style={{ marginRight: option.label ? "6px" : 0 }}
                 >
                   {h(
@@ -193,15 +193,15 @@ export default defineComponent({
     return () => (
       <div
         class={{
-          "pure-segmented": true,
-          "pure-segmented-block": props.block,
-          "pure-segmented--large": props.size === "large",
-          "pure-segmented--small": props.size === "small"
+          "ht-segmented": true,
+          "ht-segmented-block": props.block,
+          "ht-segmented--large": props.size === "large",
+          "ht-segmented--small": props.size === "small"
         }}
       >
-        <div class="pure-segmented-group">
+        <div class="ht-segmented-group">
           <div
-            class="pure-segmented-item-selected"
+            class="ht-segmented-item-selected"
             style={{
               width: `${width.value}px`,
               transform: `translateX(${translateX.value}px)`,

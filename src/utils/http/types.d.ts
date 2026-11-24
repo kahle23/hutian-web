@@ -14,34 +14,26 @@ export type RequestMethods = Extract<
   "get" | "post" | "put" | "delete" | "patch" | "option" | "head"
 >;
 
-export interface PureHttpError extends AxiosError {
+export interface HtHttpError extends AxiosError {
   isCancelRequest?: boolean;
 }
 
-export interface PureHttpResponse extends AxiosResponse {
-  config: PureHttpRequestConfig;
+export interface HtHttpResponse extends AxiosResponse {
+  config: HtHttpRequestConfig;
 }
 
-export interface PureHttpRequestConfig extends AxiosRequestConfig {
-  beforeRequestCallback?: (request: PureHttpRequestConfig) => void;
-  beforeResponseCallback?: (response: PureHttpResponse) => void;
+export interface HtHttpRequestConfig extends AxiosRequestConfig {
+  beforeRequestCallback?: (request: HtHttpRequestConfig) => void;
+  beforeResponseCallback?: (response: HtHttpResponse) => void;
 }
 
-export default class PureHttp {
+export default class HtHttp {
   request<T>(
     method: RequestMethods,
     url: string,
     param?: AxiosRequestConfig,
-    axiosConfig?: PureHttpRequestConfig
+    axiosConfig?: HtHttpRequestConfig
   ): Promise<T>;
-  post<T, P>(
-    url: string,
-    params?: P,
-    config?: PureHttpRequestConfig
-  ): Promise<T>;
-  get<T, P>(
-    url: string,
-    params?: P,
-    config?: PureHttpRequestConfig
-  ): Promise<T>;
+  post<T, P>(url: string, params?: P, config?: HtHttpRequestConfig): Promise<T>;
+  get<T, P>(url: string, params?: P, config?: HtHttpRequestConfig): Promise<T>;
 }

@@ -12,7 +12,7 @@ import Fullscreen from "~icons/ri/fullscreen-fill";
 import ExitFullscreen from "~icons/ri/fullscreen-exit-fill";
 
 defineOptions({
-  name: "ReDialog"
+  name: "HtDialog"
 });
 
 const sureBtnMap = ref({});
@@ -111,7 +111,7 @@ function handleClose(
     :key="index"
     v-bind="options"
     v-model="options.visible"
-    class="pure-dialog"
+    class="ht-dialog"
     :fullscreen="fullscreen ? true : options?.fullscreen ? true : false"
     @closed="handleClose(options, index)"
     @opened="eventsCallBack('open', options, index)"
@@ -144,7 +144,7 @@ function handleClose(
           "
         >
           <IconifyIconOffline
-            class="pure-dialog-svg"
+            class="ht-dialog-svg"
             :icon="
               options?.fullscreen
                 ? ExitFullscreen

@@ -11,7 +11,7 @@ import {
 import { cmsTypeLabel } from "../../constants";
 import type { CategoryFormItem, CategorySearchForm } from "./types";
 import editForm from "../form.vue";
-import { addDialog } from "@/components/ReDialog";
+import { addDialog } from "@/components/HtDialog";
 import { reactive, ref, onMounted, h } from "vue";
 import type { PaginationProps } from "@/components/HTable";
 import { deviceDetection } from "@/utils/ht-utils";
@@ -155,7 +155,7 @@ export function useCategory() {
     onSearch();
   };
 
-  /** 新增/编辑弹窗（ReDialog + form.vue；编辑清空 code 时提交 clearFields） */
+  /** 新增/编辑弹窗（HtDialog + form.vue；编辑清空 code 时提交 clearFields） */
   async function openDialog(title = "新增", row?: CategorySmpItem) {
     const isEdit = title === "修改";
     // 编辑态先拉详情回显（拉取失败退回行数据，不阻塞弹窗）

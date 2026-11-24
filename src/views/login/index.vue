@@ -12,7 +12,7 @@ import { useLayout } from "@/layout/hooks/useLayout";
 import { useUserStoreHook } from "@/store/modules/user";
 import { initRouter, getTopMenu } from "@/router/utils";
 import { bg, avatar, illustration } from "./utils/static";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { useRenderIcon } from "@/components/HtIcon/src/hooks";
 import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
 
 import dayIcon from "@/assets/svg/day.svg?component";

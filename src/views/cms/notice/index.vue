@@ -8,7 +8,7 @@ import {
   type CategoryPortalList,
   type PortalItem
 } from "@/api/cms";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { useRenderIcon } from "@/components/HtIcon/src/hooks";
 import Search from "~icons/ep/search";
 
 defineOptions({

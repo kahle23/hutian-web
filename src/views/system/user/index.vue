@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useUser } from "./utils/hook";
-import { PureTableBar } from "@/components/RePureTableBar";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { HtTableBar } from "@/components/HtTableBar";
+import { useRenderIcon } from "@/components/HtIcon/src/hooks";
 
 import Delete from "~icons/ep/delete";
 import EditPen from "~icons/ep/edit-pen";
@@ -73,7 +73,7 @@ const {
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="用户管理" :columns="columns" @refresh="onSearch">
+    <HtTableBar title="用户管理" :columns="columns" @refresh="onSearch">
       <template #buttons>
         <el-button
           type="primary"
@@ -154,7 +154,7 @@ const {
           </template>
         </ht-table>
       </template>
-    </PureTableBar>
+    </HtTableBar>
   </div>
 </template>
 

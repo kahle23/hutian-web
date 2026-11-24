@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useChangeLog } from "./utils/hook";
-import { PureTableBar } from "@/components/RePureTableBar";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { HtTableBar } from "@/components/HtTableBar";
+import { useRenderIcon } from "@/components/HtIcon/src/hooks";
 
 import Delete from "~icons/ep/delete";
 import View from "~icons/ep/view";
@@ -76,7 +76,7 @@ const {
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="变动日志" :columns="columns" @refresh="onSearch">
+    <HtTableBar title="变动日志" :columns="columns" @refresh="onSearch">
       <template v-slot="{ size, dynamicColumns }">
         <ht-table
           ref="tableRef"
@@ -128,7 +128,7 @@ const {
           </template>
         </ht-table>
       </template>
-    </PureTableBar>
+    </HtTableBar>
   </div>
 </template>
 

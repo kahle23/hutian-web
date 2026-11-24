@@ -19,7 +19,7 @@ const {
   device,
   logout,
   onPanel,
-  pureApp,
+  appStore,
   username,
   userAvatar,
   avatarsStyle,
@@ -32,7 +32,7 @@ const {
     <LaySidebarTopCollapse
       v-if="device === 'mobile'"
       class="hamburger-container"
-      :is-active="pureApp.sidebar.opened"
+      :is-active="appStore.sidebar.opened"
       @toggleClick="toggleSideBar"
     />
 

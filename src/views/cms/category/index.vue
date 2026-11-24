@@ -2,8 +2,8 @@
 import { ref } from "vue";
 import { useCategory } from "./utils/hook";
 import { CMS_TYPE_OPTIONS } from "../constants";
-import { PureTableBar } from "@/components/RePureTableBar";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { HtTableBar } from "@/components/HtTableBar";
+import { useRenderIcon } from "@/components/HtIcon/src/hooks";
 
 import Refresh from "~icons/ep/refresh";
 import Search from "~icons/ep/search";
@@ -97,7 +97,7 @@ const {
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="分类管理" :columns="columns" @refresh="onSearch">
+    <HtTableBar title="分类管理" :columns="columns" @refresh="onSearch">
       <template #buttons>
         <el-button
           type="primary"
@@ -158,7 +158,7 @@ const {
           </template>
         </ht-table>
       </template>
-    </PureTableBar>
+    </HtTableBar>
   </div>
 </template>
 

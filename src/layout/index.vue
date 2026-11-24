@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import "animate.css";
-// 引入 src/components/ReIcon/src/offlineIcon.ts 文件中所有使用addIcon添加过的本地图标
-import "@/components/ReIcon/src/offlineIcon";
+// 引入 src/components/HtIcon/src/offlineIcon.ts 文件中所有使用addIcon添加过的本地图标
+import "@/components/HtIcon/src/offlineIcon";
 import { setType } from "./types";
 import { useLayout } from "./hooks/useLayout";
 import { useAppStoreHook } from "@/store/modules/app";
@@ -35,7 +35,7 @@ const appWrapperRef = ref();
 const { isDark } = useDark();
 const { layout } = useLayout();
 const isMobile = deviceDetection();
-const pureSetting = useSettingStoreHook();
+const settingStore = useSettingStoreHook();
 const { $storage } = useGlobal<GlobalPropertiesApi>();
 
 const set: setType = reactive({
@@ -48,7 +48,7 @@ const set: setType = reactive({
   }),
 
   fixedHeader: computed(() => {
-    return pureSetting.fixedHeader;
+    return settingStore.fixedHeader;
   }),
 
   classes: computed(() => {
@@ -72,7 +72,7 @@ function setTheme(layoutModel: string) {
     theme: $storage.layout?.theme,
     darkMode: $storage.layout?.darkMode,
     sidebarStatus: $storage.layout?.sidebarStatus,
-    epThemeColor: $storage.layout?.epThemeColor,
+    primaryColor: $storage.layout?.primaryColor,
     themeColor: $storage.layout?.themeColor,
     overallStyle: $storage.layout?.overallStyle
   };
@@ -141,11 +141,11 @@ const LayHeader = defineComponent({
       },
       {
         default: () => [
-          !pureSetting.hiddenSideBar &&
+          !settingStore.hiddenSideBar &&
           (layout.value.includes("vertical") || layout.value.includes("mix"))
             ? h(LayNavbar)
             : null,
-          !pureSetting.hiddenSideBar && layout.value.includes("horizontal")
+          !settingStore.hiddenSideBar && layout.value.includes("horizontal")
             ? h(NavHorizontal)
             : null,
           h(LayTag)
@@ -169,14 +169,14 @@ const LayHeader = defineComponent({
     />
     <NavVertical
       v-show="
-        !pureSetting.hiddenSideBar &&
+        !settingStore.hiddenSideBar &&
         (layout.includes('vertical') || layout.includes('mix'))
       "
     />
     <div
       :class="[
         'main-container',
-        pureSetting.hiddenSideBar ? 'main-hidden' : ''
+        settingStore.hiddenSideBar ? 'main-hidden' : ''
       ]"
     >
       <div v-if="set.fixedHeader">

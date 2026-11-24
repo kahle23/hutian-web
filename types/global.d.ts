@@ -122,7 +122,7 @@ declare global {
     hideTabs?: boolean;
     hideFooter?: boolean;
     sidebarStatus?: boolean;
-    epThemeColor?: string;
+    primaryColor?: string;
     themeColor?: string;
     overallStyle?: string;
     showLogo?: boolean;
@@ -143,7 +143,7 @@ declare global {
       theme?: string;
       darkMode?: boolean;
       sidebarStatus?: boolean;
-      epThemeColor?: string;
+      primaryColor?: string;
       themeColor?: string;
       overallStyle?: string;
     };

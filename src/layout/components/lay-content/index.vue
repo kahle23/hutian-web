@@ -87,7 +87,7 @@ const transitionMain = defineComponent({
     return h(
       Transition,
       {
-        name: enterTransition ? "pure-classes-transition" : transitionName,
+        name: enterTransition ? "ht-classes-transition" : transitionName,
         enterActiveClass: enterTransition
           ? `animate__animated ${enterTransition}`
           : undefined,

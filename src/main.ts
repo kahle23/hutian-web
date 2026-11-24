@@ -34,14 +34,14 @@ import {
   IconifyIconOffline,
   IconifyIconOnline,
   FontIcon
-} from "./components/ReIcon";
+} from "./components/HtIcon";
 app.component("IconifyIconOffline", IconifyIconOffline);
 app.component("IconifyIconOnline", IconifyIconOnline);
 app.component("FontIcon", FontIcon);
 
 // 全局注册按钮级别权限组件
-import { Auth } from "@/components/ReAuth";
-import { Perms } from "@/components/RePerms";
+import { Auth } from "@/components/HtAuth";
+import { Perms } from "@/components/HtPerms";
 app.component("Auth", Auth);
 app.component("Perms", Perms);
 

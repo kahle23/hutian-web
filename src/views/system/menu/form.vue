@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import ReCol from "@/components/ReCol";
+import HtCol from "@/components/HtCol";
 import { formRules } from "./utils/rule";
 import { FormProps } from "./utils/types";
 
@@ -45,7 +45,7 @@ defineExpose({ getRef });
     label-width="82px"
   >
     <el-row :gutter="30">
-      <re-col :value="12" :xs="24" :sm="24">
+      <ht-col :value="12" :xs="24" :sm="24">
         <el-form-item label="菜单类型" prop="type">
           <el-radio-group v-model="newFormInline.type">
             <el-radio-button
@@ -57,9 +57,9 @@ defineExpose({ getRef });
             </el-radio-button>
           </el-radio-group>
         </el-form-item>
-      </re-col>
+      </ht-col>
 
-      <re-col :value="12" :xs="24" :sm="24">
+      <ht-col :value="12" :xs="24" :sm="24">
         <el-form-item label="上级菜单">
           <el-tree-select
             v-model="newFormInline.parentId"
@@ -78,9 +78,9 @@ defineExpose({ getRef });
             placeholder="不选则为顶级菜单"
           />
         </el-form-item>
-      </re-col>
+      </ht-col>
 
-      <re-col :value="12" :xs="24" :sm="24">
+      <ht-col :value="12" :xs="24" :sm="24">
         <el-form-item label="菜单名称" prop="name">
           <el-input
             v-model="newFormInline.name"
@@ -88,8 +88,8 @@ defineExpose({ getRef });
             placeholder="请输入菜单名称"
           />
         </el-form-item>
-      </re-col>
-      <re-col :value="12" :xs="24" :sm="24">
+      </ht-col>
+      <ht-col :value="12" :xs="24" :sm="24">
         <el-form-item label="菜单图标">
           <el-input
             v-model="newFormInline.icon"
@@ -97,9 +97,9 @@ defineExpose({ getRef });
             placeholder="图标短名，如 setting / user"
           />
         </el-form-item>
-      </re-col>
+      </ht-col>
 
-      <re-col v-if="newFormInline.type !== 3" :value="12" :xs="24" :sm="24">
+      <ht-col v-if="newFormInline.type !== 3" :value="12" :xs="24" :sm="24">
         <el-form-item label="路由地址" prop="route">
           <el-input
             v-model="newFormInline.route"
@@ -107,8 +107,8 @@ defineExpose({ getRef });
             placeholder="路由段，如 user（子级相对父级拼接）"
           />
         </el-form-item>
-      </re-col>
-      <re-col v-if="newFormInline.type === 2" :value="12" :xs="24" :sm="24">
+      </ht-col>
+      <ht-col v-if="newFormInline.type === 2" :value="12" :xs="24" :sm="24">
         <el-form-item label="组件路径">
           <el-input
             v-model="newFormInline.component"
@@ -116,9 +116,9 @@ defineExpose({ getRef });
             placeholder="如 system/user/index"
           />
         </el-form-item>
-      </re-col>
+      </ht-col>
 
-      <re-col :value="12" :xs="24" :sm="24">
+      <ht-col :value="12" :xs="24" :sm="24">
         <el-form-item label="权限标识">
           <el-input
             v-model="newFormInline.permission"
@@ -126,8 +126,8 @@ defineExpose({ getRef });
             placeholder="如 system:user:add"
           />
         </el-form-item>
-      </re-col>
-      <re-col :value="12" :xs="24" :sm="24">
+      </ht-col>
+      <ht-col :value="12" :xs="24" :sm="24">
         <el-form-item label="排序" prop="sort">
           <el-input-number
             v-model="newFormInline.sort"
@@ -137,9 +137,9 @@ defineExpose({ getRef });
             controls-position="right"
           />
         </el-form-item>
-      </re-col>
+      </ht-col>
 
-      <re-col :value="12" :xs="24" :sm="24">
+      <ht-col :value="12" :xs="24" :sm="24">
         <el-form-item label="是否启用">
           <el-switch
             v-model="newFormInline.enabled"
@@ -150,8 +150,8 @@ defineExpose({ getRef });
             inline-prompt
           />
         </el-form-item>
-      </re-col>
-      <re-col v-if="newFormInline.type !== 3" :value="12" :xs="24" :sm="24">
+      </ht-col>
+      <ht-col v-if="newFormInline.type !== 3" :value="12" :xs="24" :sm="24">
         <el-form-item label="是否显示">
           <el-switch
             v-model="newFormInline.showFlag"
@@ -162,9 +162,9 @@ defineExpose({ getRef });
             inline-prompt
           />
         </el-form-item>
-      </re-col>
+      </ht-col>
 
-      <re-col :span="24">
+      <ht-col :span="24">
         <el-form-item label="描述">
           <el-input
             v-model="newFormInline.description"
@@ -172,7 +172,7 @@ defineExpose({ getRef });
             placeholder="请输入描述信息"
           />
         </el-form-item>
-      </re-col>
+      </ht-col>
     </el-row>
   </el-form>
 </template>

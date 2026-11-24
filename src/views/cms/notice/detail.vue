@@ -3,7 +3,7 @@ import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getPortalDetail, type PortalItem } from "@/api/cms";
 import ContentRender from "../components/content-render.vue";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { useRenderIcon } from "@/components/HtIcon/src/hooks";
 
 import Back from "~icons/ep/back";
 

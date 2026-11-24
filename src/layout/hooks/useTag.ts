@@ -32,7 +32,7 @@ export function useTags() {
   const route = useRoute();
   const router = useRouter();
   const instance = getCurrentInstance();
-  const pureSetting = useSettingStoreHook();
+  const settingStore = useSettingStoreHook();
 
   const buttonTop = ref(0);
   const buttonLeft = ref(0);
@@ -202,9 +202,9 @@ export function useTags() {
   }
 
   function onContentFullScreen() {
-    pureSetting.hiddenSideBar
-      ? pureSetting.changeSetting({ key: "hiddenSideBar", value: false })
-      : pureSetting.changeSetting({ key: "hiddenSideBar", value: true });
+    settingStore.hiddenSideBar
+      ? settingStore.changeSetting({ key: "hiddenSideBar", value: false })
+      : settingStore.changeSetting({ key: "hiddenSideBar", value: true });
   }
 
   onMounted(() => {
@@ -234,7 +234,7 @@ export function useTags() {
     buttonLeft,
     translateX,
     isFixedTag,
-    pureSetting,
+    settingStore,
     activeIndex,
     getTabStyle,
     isScrolling,

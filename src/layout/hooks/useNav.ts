@@ -20,7 +20,7 @@ const errorInfo =
 
 export function useNav() {
   const route = useRoute();
-  const pureApp = useAppStoreHook();
+  const appStore = useAppStoreHook();
   const routers = useRouter().options.routes;
   const { isFullscreen, toggle } = useFullscreen();
   const { wholeMenus } = storeToRefs(usePermissionStoreHook());
@@ -56,11 +56,11 @@ export function useNav() {
   });
 
   const isCollapse = computed(() => {
-    return !pureApp.getSidebarStatus;
+    return !appStore.getSidebarStatus;
   });
 
   const device = computed(() => {
-    return pureApp.getDevice;
+    return appStore.getDevice;
   });
 
   const { $storage, $config } = useGlobal<GlobalPropertiesApi>();
@@ -93,7 +93,7 @@ export function useNav() {
   }
 
   function toggleSideBar() {
-    pureApp.toggleSideBar();
+    appStore.toggleSideBar();
   }
 
   function handleResize(menuRef) {
@@ -148,7 +148,7 @@ export function useNav() {
     resolvePath,
     getLogo,
     isCollapse,
-    pureApp,
+    appStore,
     username,
     userAvatar,
     avatarsStyle,

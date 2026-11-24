@@ -1,7 +1,7 @@
 import detailComp from "../detail.vue";
 import { message } from "@/utils/message";
 import { getOpLogPage, deleteOpLogs, type OpLogItem } from "@/api/basic";
-import { addDialog } from "@/components/ReDialog";
+import { addDialog } from "@/components/HtDialog";
 import type { PaginationProps } from "@/components/HTable";
 import { deviceDetection } from "@/utils/ht-utils";
 import { reactive, ref, onMounted, h } from "vue";

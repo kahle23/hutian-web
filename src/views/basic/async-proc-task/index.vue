@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useAsyncProcTask } from "./utils/hook";
-import { PureTableBar } from "@/components/RePureTableBar";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { HtTableBar } from "@/components/HtTableBar";
+import { useRenderIcon } from "@/components/HtIcon/src/hooks";
 
 import View from "~icons/ep/view";
 import Refresh from "~icons/ep/refresh";
@@ -92,7 +92,7 @@ const {
       </el-form-item>
     </el-form>
 
-    <PureTableBar title="异步任务" :columns="columns" @refresh="onSearch">
+    <HtTableBar title="异步任务" :columns="columns" @refresh="onSearch">
       <template v-slot="{ size, dynamicColumns }">
         <ht-table
           ref="tableRef"
@@ -128,7 +128,7 @@ const {
           </template>
         </ht-table>
       </template>
-    </PureTableBar>
+    </HtTableBar>
   </div>
 </template>
 

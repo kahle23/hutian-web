@@ -14,14 +14,14 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.pure-iconfont-tabs:before {
+.ht-iconfont-tabs:before {
   content: "\e63e";
 }
 
-.pure-iconfont-logo:before {
+.ht-iconfont-logo:before {
   content: "\e620";
 }
 
-.pure-iconfont-new:before {
+.ht-iconfont-new:before {
   content: "\e615";
 }

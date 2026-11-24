@@ -44,7 +44,7 @@ const message = (
   if (!params) {
     return ElMessage({
       message,
-      customClass: "pure-message"
+      customClass: "ht-message"
     });
   } else {
     const {
@@ -74,8 +74,8 @@ const message = (
       appendTo,
       grouping,
       repeatNum,
-      // 全局搜 pure-message 即可知道该类的样式位置
-      customClass: customClass === "antd" ? "pure-message" : "",
+      // 全局搜 ht-message 即可知道该类的样式位置
+      customClass: customClass === "antd" ? "ht-message" : "",
       onClose: () => (isFunction(onClose) ? onClose() : null)
     });
   }

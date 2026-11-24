@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { optionsItem } from "../types";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { useRenderIcon } from "@/components/HtIcon/src/hooks";
 import StarIcon from "~icons/ep/star";
 import CloseIcon from "~icons/ep/close";
 

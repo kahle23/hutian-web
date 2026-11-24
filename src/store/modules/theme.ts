@@ -6,24 +6,24 @@ import {
   responsiveStorageNameSpace
 } from "../utils";
 
-export const useEpThemeStore = defineStore("pure-epTheme", {
+export const useThemeStore = defineStore("ht-theme", {
   state: () => ({
-    epThemeColor:
+    primaryColor:
       storageLocal().getItem<StorageConfigs>(
         `${responsiveStorageNameSpace()}layout`
-      )?.epThemeColor ?? getConfig().EpThemeColor,
-    epTheme:
+      )?.primaryColor ?? getConfig().EpThemeColor,
+    theme:
       storageLocal().getItem<StorageConfigs>(
         `${responsiveStorageNameSpace()}layout`
       )?.theme ?? getConfig().Theme
   }),
   getters: {
-    getEpThemeColor(state) {
-      return state.epThemeColor;
+    getPrimaryColor(state) {
+      return state.primaryColor;
     },
     /** 用于mix导航模式下hamburger-svg的fill属性 */
     fill(state) {
-      if (state.epTheme === "light") {
+      if (state.theme === "light") {
         return "#0d9488";
       } else {
         return "#fff";
@@ -31,19 +31,19 @@ export const useEpThemeStore = defineStore("pure-epTheme", {
     }
   },
   actions: {
-    setEpThemeColor(newColor: string): void {
+    setPrimaryColor(newColor: string): void {
       const layout = storageLocal().getItem<StorageConfigs>(
         `${responsiveStorageNameSpace()}layout`
       );
-      this.epTheme = layout?.theme;
-      this.epThemeColor = newColor;
+      this.theme = layout?.theme;
+      this.primaryColor = newColor;
       if (!layout) return;
-      layout.epThemeColor = newColor;
+      layout.primaryColor = newColor;
       storageLocal().setItem(`${responsiveStorageNameSpace()}layout`, layout);
     }
   }
 });
 
-export function useEpThemeStoreHook() {
-  return useEpThemeStore(store);
+export function useThemeStoreHook() {
+  return useThemeStore(store);
 }

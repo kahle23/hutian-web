@@ -4,7 +4,7 @@ import { useNav } from "@/layout/hooks/useNav";
 import LaySearch from "../lay-search/index.vue";
 import LayNotice from "../lay-notice/index.vue";
 import { ref, toRaw, watch, onMounted, nextTick } from "vue";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { useRenderIcon } from "@/components/HtIcon/src/hooks";
 import { getParentPaths, findRouteByPath } from "@/router/utils";
 import { usePermissionStoreHook } from "@/store/modules/permission";
 import LaySidebarExtraIcon from "../lay-sidebar/components/SidebarExtraIcon.vue";
@@ -66,7 +66,7 @@ watch(
       ref="menuRef"
       router
       mode="horizontal"
-      popper-class="pure-scrollbar"
+      popper-class="ht-scrollbar"
       class="horizontal-header-menu"
       :default-active="defaultActive"
     >

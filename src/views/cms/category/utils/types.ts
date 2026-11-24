@@ -1,4 +1,4 @@
-/** 分类新增/编辑表单（ReDialog form.vue 入参） */
+/** 分类新增/编辑表单（HtDialog form.vue 入参） */
 export interface CategoryFormItem {
   /** 分类名称（必填） */
   name: string;

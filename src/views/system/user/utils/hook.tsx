@@ -14,7 +14,7 @@ import {
   getRolePage,
   type RoleItem
 } from "@/api/system";
-import { addDialog } from "@/components/ReDialog";
+import { addDialog } from "@/components/HtDialog";
 import type { FormItemProps } from "../utils/types";
 import type { PaginationProps } from "@/components/HTable";
 import { ElMessageBox } from "element-plus";

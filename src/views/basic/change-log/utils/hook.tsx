@@ -5,7 +5,7 @@ import {
   deleteChangeLogs,
   type ChangeLogItem
 } from "@/api/basic";
-import { addDialog } from "@/components/ReDialog";
+import { addDialog } from "@/components/HtDialog";
 import type { PaginationProps } from "@/components/HTable";
 import { deviceDetection } from "@/utils/ht-utils";
 import { reactive, ref, onMounted, h } from "vue";

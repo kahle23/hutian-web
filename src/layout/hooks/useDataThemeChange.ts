@@ -6,7 +6,7 @@ import { routerArrays } from "@/layout/types";
 import { router, resetRouter } from "@/router";
 import type { themeColorsType } from "../types";
 import { useAppStoreHook } from "@/store/modules/app";
-import { useEpThemeStoreHook } from "@/store/modules/epTheme";
+import { useThemeStoreHook } from "@/store/modules/theme";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { darken, lighten, useGlobal, storageLocal } from "@/utils/ht-utils";
 
@@ -57,16 +57,16 @@ export function useDataThemeChange() {
       theme,
       darkMode: dataTheme.value,
       sidebarStatus: $storage.layout?.sidebarStatus,
-      epThemeColor: $storage.layout?.epThemeColor,
+      primaryColor: $storage.layout?.primaryColor,
       themeColor: isClick ? theme : storageThemeColor,
       overallStyle: overallStyle.value
     };
 
     if (theme === "default" || theme === "light") {
-      setEpThemeColor(getConfig().EpThemeColor);
+      setPrimaryColor(getConfig().EpThemeColor);
     } else {
       const colors = themeColors.value.find(v => v.themeColor === theme);
-      setEpThemeColor(colors.color);
+      setPrimaryColor(colors.color);
     }
   }
 
@@ -78,8 +78,8 @@ export function useDataThemeChange() {
   }
 
   /** 设置 `element-plus` 主题色 */
-  const setEpThemeColor = (color: string) => {
-    useEpThemeStoreHook().setEpThemeColor(color);
+  const setPrimaryColor = (color: string) => {
+    useThemeStoreHook().setPrimaryColor(color);
     document.documentElement.style.setProperty("--el-color-primary", color);
     for (let i = 1; i <= 2; i++) {
       setPropertyPrimary("dark", i, color);
@@ -92,10 +92,10 @@ export function useDataThemeChange() {
   /** 浅色、深色整体风格切换 */
   function dataThemeChange(overall?: string) {
     overallStyle.value = overall;
-    if (useEpThemeStoreHook().epTheme === "light" && dataTheme.value) {
+    if (useThemeStoreHook().theme === "light" && dataTheme.value) {
       setLayoutThemeColor("default", false);
     } else {
-      setLayoutThemeColor(useEpThemeStoreHook().epTheme, false);
+      setLayoutThemeColor(useThemeStoreHook().theme, false);
     }
 
     if (dataTheme.value) {
@@ -114,7 +114,7 @@ export function useDataThemeChange() {
     storageLocal().clear();
     const { Grey, Weak, MultiTagsCache, EpThemeColor, Layout } = getConfig();
     useAppStoreHook().setLayout(Layout);
-    setEpThemeColor(EpThemeColor);
+    setPrimaryColor(EpThemeColor);
     useMultiTagsStoreHook().multiTagsCacheChange(MultiTagsCache);
     toggleClass(Grey, "html-grey", document.querySelector("html"));
     toggleClass(Weak, "html-weakness", document.querySelector("html"));
@@ -132,7 +132,7 @@ export function useDataThemeChange() {
     onReset,
     toggleClass,
     dataThemeChange,
-    setEpThemeColor,
+    setPrimaryColor,
     setLayoutThemeColor
   };
 }

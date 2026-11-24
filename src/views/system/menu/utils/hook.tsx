@@ -7,10 +7,10 @@ import {
   addMenu,
   editMenu
 } from "@/api/system";
-import { addDialog } from "@/components/ReDialog";
+import { addDialog } from "@/components/HtDialog";
 import { reactive, ref, onMounted, h } from "vue";
 import type { FormItemProps } from "../utils/types";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { useRenderIcon } from "@/components/HtIcon/src/hooks";
 import { cloneDeep, isAllEmpty, deviceDetection } from "@/utils/ht-utils";
 import { mapIcon } from "@/router/menu";
 

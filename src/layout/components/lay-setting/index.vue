@@ -14,7 +14,7 @@ import LayPanel from "../lay-panel/index.vue";
 import { useNav } from "@/layout/hooks/useNav";
 import { useAppStoreHook } from "@/store/modules/app";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
-import Segmented, { type OptionsType } from "@/components/ReSegmented";
+import Segmented, { type OptionsType } from "@/components/HtSegmented";
 import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
 import { useDark, useGlobal, debounce, isNumber } from "@/utils/ht-utils";
 
@@ -245,7 +245,7 @@ function setLayoutModel(layout: string) {
     theme: layoutTheme.value.theme,
     darkMode: $storage.layout?.darkMode,
     sidebarStatus: $storage.layout?.sidebarStatus,
-    epThemeColor: $storage.layout?.epThemeColor,
+    primaryColor: $storage.layout?.primaryColor,
     themeColor: $storage.layout?.themeColor,
     overallStyle: $storage.layout?.overallStyle
   };
@@ -353,7 +353,7 @@ onUnmounted(() => removeMatchMedia);
       </ul>
 
       <p :class="['mt-5!', pClass]">导航模式</p>
-      <ul class="pure-theme">
+      <ul class="ht-theme">
         <li
           ref="verticalRef"
           v-tippy="{
@@ -414,7 +414,7 @@ onUnmounted(() => removeMatchMedia);
         <button
           v-else
           v-ripple="{ class: 'text-gray-300' }"
-          class="bg-transparent flex-c w-full h-20 rounded-md border border-[var(--pure-border-color)]"
+          class="bg-transparent flex-c w-full h-20 rounded-md border border-[var(--ht-border-color)]"
           @click="setStretch(!settings.stretch)"
         >
           <div
@@ -521,7 +521,7 @@ onUnmounted(() => removeMatchMedia);
 }
 
 :deep(.el-switch__core) {
-  --el-switch-off-color: var(--pure-switch-off-color);
+  --el-switch-off-color: var(--ht-switch-off-color);
 
   min-width: 36px;
   height: 18px;
@@ -547,7 +547,7 @@ onUnmounted(() => removeMatchMedia);
   }
 }
 
-.pure-theme {
+.ht-theme {
   display: flex;
   gap: 12px;
 

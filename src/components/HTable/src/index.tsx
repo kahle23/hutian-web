@@ -1,5 +1,5 @@
 /**
- * HTable（壶天自研表格组件）：围绕 `el-table` 的薄封装，组件签名与行为对齐原包 PureTable 3.3.0。
+ * HTable（壶天自研表格组件）：围绕 `el-table` 的薄封装，组件签名与行为对齐早期参考实现。
  * 拓展能力：`columns` 的 hide / slot / cellRenderer / children 等列属性、`pagination` 分页（回写页码与
  * 每页条数）、`adaptive` 自适应高度、`loading` 加载动画；未声明的属性与事件经 `$attrs` 透传给 `el-table`。
  * 对外暴露 getTableRef / getTableDoms / setAdaptive / setHeaderSticky。原包类型声明存档于 docs/vendor-ref/table-types/。

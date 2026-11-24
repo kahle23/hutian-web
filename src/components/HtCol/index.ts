@@ -3,7 +3,7 @@ import { h, defineComponent } from "vue";
 
 // 封装element-plus的el-col组件
 export default defineComponent({
-  name: "ReCol",
+  name: "HtCol",
   props: {
     value: {
       type: Number,

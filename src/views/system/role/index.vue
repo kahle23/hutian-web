@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useRole } from "./utils/hook";
 import { ref, computed, nextTick, onMounted } from "vue";
-import { PureTableBar } from "@/components/RePureTableBar";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { HtTableBar } from "@/components/HtTableBar";
+import { useRenderIcon } from "@/components/HtIcon/src/hooks";
 import {
   delay,
   subBefore,
@@ -124,7 +124,7 @@ onMounted(() => {
       ref="contentRef"
       :class="['flex', deviceDetection() ? 'flex-wrap' : '']"
     >
-      <PureTableBar
+      <HtTableBar
         :class="[isShow && !deviceDetection() ? 'w-[60vw]!' : 'w-full']"
         style="transition: width 220ms cubic-bezier(0.4, 0, 0.2, 1)"
         title="角色管理"
@@ -201,7 +201,7 @@ onMounted(() => {
             </template>
           </ht-table>
         </template>
-      </PureTableBar>
+      </HtTableBar>
 
       <div
         v-if="isShow"

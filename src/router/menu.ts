@@ -1,7 +1,7 @@
 import type { MenuTreeResult } from "@/api/routes";
 
 /** 基座动态路由节点（component 为字符串路径，由 addAsyncRoutes 经 import.meta.glob 映射为组件） */
-export type PureRoute = {
+export type HtRoute = {
   path: string;
   name?: string;
   component?: string;
@@ -11,12 +11,12 @@ export type PureRoute = {
     rank?: number;
     showLink?: boolean;
   };
-  children?: Array<PureRoute>;
+  children?: Array<HtRoute>;
 };
 
 /**
  * 后端 icon 短名 → iconify 本地图标名（斜杠格式）。
- * 需在 @/components/ReIcon/src/offlineIcon.ts 同步 addIcon 注册才能离线渲染；
+ * 需在 @/components/HtIcon/src/offlineIcon.ts 同步 addIcon 注册才能离线渲染；
  * 查不到时回退 ep/menu
  */
 const ICON_MAP: Record<string, string> = {
@@ -45,9 +45,9 @@ function convertMenu(
   menu: MenuTreeResult,
   parentPath: string,
   rank?: number
-): PureRoute {
+): HtRoute {
   const path = `${parentPath}/${menu.route.replace(/^\/+/, "")}`;
-  const route: PureRoute = {
+  const route: HtRoute = {
     path,
     name: toRouteName(path),
     meta: {
@@ -74,7 +74,7 @@ function convertMenu(
  * - 禁用/隐藏节点由 meta 控制显示，按钮节点直接丢弃（按钮权限走 /system/current/permissions 单独下发）
  * - 空目录（无子节点）过滤，避免侧栏出现空壳
  */
-export function toPureRoutes(menus: Array<MenuTreeResult>): Array<PureRoute> {
+export function toHtRoutes(menus: Array<MenuTreeResult>): Array<HtRoute> {
   return menus
     .filter(menu => menu.enabled === 1 && menu.type !== 3)
     .map(menu => convertMenu(menu, "", menu.sort))

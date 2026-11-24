@@ -11,7 +11,7 @@ import {
   type ReadUserRow
 } from "@/api/cms";
 import ContentRender from "../components/content-render.vue";
-import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { useRenderIcon } from "@/components/HtIcon/src/hooks";
 import {
   cmsStatusLabel,
   cmsStatusTagType,

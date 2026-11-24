@@ -1,5 +1,5 @@
 import Sortable from "sortablejs";
-import { useEpThemeStoreHook } from "@/store/modules/epTheme";
+import { useThemeStoreHook } from "@/store/modules/theme";
 import {
   type PropType,
   ref,
@@ -51,7 +51,7 @@ const props = {
 };
 
 export default defineComponent({
-  name: "PureTableBar",
+  name: "HtTableBar",
   props,
   emits: ["refresh", "fullscreen"],
   setup(props, { emit, slots, attrs }) {
@@ -74,8 +74,7 @@ export default defineComponent({
     const getDropdownItemStyle = computed(() => {
       return s => {
         return {
-          background:
-            s === size.value ? useEpThemeStoreHook().epThemeColor : "",
+          background: s === size.value ? useThemeStoreHook().primaryColor : "",
           color: s === size.value ? "#fff" : "var(--el-text-color-primary)"
         };
       };

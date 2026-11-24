@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import reDialog from "./index.vue";
+import htDialog from "./index.vue";
 import { useTimeoutFn } from "@vueuse/core";
 import { withInstall } from "@/utils/ht-utils";
 import type {
@@ -53,11 +53,11 @@ const closeAllDialog = () => {
 
 /** 千万别忘了在下面引入并注册，放心注册，不使用`addDialog`调用就不会被挂载
  */
-const ReDialog = withInstall(reDialog);
+const HtDialog = withInstall(htDialog);
 
 export type { EventType, ArgsType, DialogProps, ButtonProps, DialogOptions };
 export {
-  ReDialog,
+  HtDialog,
   dialogStore,
   addDialog,
   closeDialog,
