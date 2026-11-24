@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
-  <!-- 壶天登录页波浪背景：青瓷渐变主波浪（轮廓与原 pure-admin 模板 bg.png 同构） -->
+  <!-- 壶天登录页波浪背景：青瓷渐变主波浪（轮廓与早期模板参考 bg.png 同构） -->
   <defs>
     <linearGradient id="ht-bg-wave" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#0f766e" />
