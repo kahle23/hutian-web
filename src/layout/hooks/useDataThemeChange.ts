@@ -63,7 +63,7 @@ export function useDataThemeChange() {
     };
 
     if (theme === "default" || theme === "light") {
-      setPrimaryColor(getConfig().EpThemeColor);
+      setPrimaryColor(getConfig().ThemeColor);
     } else {
       const colors = themeColors.value.find(v => v.themeColor === theme);
       setPrimaryColor(colors.color);
@@ -112,9 +112,9 @@ export function useDataThemeChange() {
   function onReset() {
     removeToken();
     storageLocal().clear();
-    const { Grey, Weak, MultiTagsCache, EpThemeColor, Layout } = getConfig();
+    const { Grey, Weak, MultiTagsCache, ThemeColor, Layout } = getConfig();
     useAppStoreHook().setLayout(Layout);
-    setPrimaryColor(EpThemeColor);
+    setPrimaryColor(ThemeColor);
     useMultiTagsStoreHook().multiTagsCacheChange(MultiTagsCache);
     toggleClass(Grey, "html-grey", document.querySelector("html"));
     toggleClass(Weak, "html-weakness", document.querySelector("html"));

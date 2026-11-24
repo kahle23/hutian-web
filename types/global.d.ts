@@ -95,7 +95,7 @@ declare global {
     HideFooter?: boolean;
     Stretch?: boolean | number;
     SidebarStatus?: boolean;
-    EpThemeColor?: string;
+    ThemeColor?: string;
     ShowLogo?: boolean;
     ShowModel?: string;
     MenuArrowIconNoTransition?: boolean;

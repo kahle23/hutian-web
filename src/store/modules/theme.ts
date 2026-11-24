@@ -11,7 +11,7 @@ export const useThemeStore = defineStore("ht-theme", {
     primaryColor:
       storageLocal().getItem<StorageConfigs>(
         `${responsiveStorageNameSpace()}layout`
-      )?.primaryColor ?? getConfig().EpThemeColor,
+      )?.primaryColor ?? getConfig().ThemeColor,
     theme:
       storageLocal().getItem<StorageConfigs>(
         `${responsiveStorageNameSpace()}layout`
