@@ -215,11 +215,11 @@ export type LoadingConfig = {
   text?: string;
   /** 动画图标 */
   spinner?: string;
-  /** 自定义动画 */
+  /** 自定义 `svg` 加载图标 */
   svg?: string | VNode;
-  /** `svg` 的 `viewBox` */
-  svgViewBox?: string;
-  /** 背景色，默认值 `rgba(255, 255, 255, .9)` */
+  /** 自定义 `svg` 加载图标的大小 */
+  viewBox?: string;
+  /** 背景遮罩的颜色，默认值：暗黑模式下为 `rgba(0, 0, 0, 0.45)`，正常模式下为 `rgba(255, 255, 255, 0.45)` */
   background?: string;
 };
 
@@ -239,6 +239,8 @@ export interface HTableProps {
   alignWhole?: Align;
   /** 整个表格所有表头的对齐方式 */
   headerAlign?: Align;
+  /** 当内容过长被隐藏时显示 `tooltip`，默认值 `false` */
+  showOverflowTooltip?: boolean;
   /** 表格行鼠标悬浮时的背景色 */
   rowHoverBgColor?: string;
   /** 分页配置，传入即渲染分页 */

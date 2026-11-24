@@ -1,17 +1,8 @@
 /**
- * HTable（壶天自研表格组件）
- *
- * 围绕 `el-table` 的薄封装，替代原表格组件依赖（编译产物约 16K）。
- * 组件签名与行为对齐原包 PureTable：
- * - `columns` 支持 `hide` / `slot` / `headerSlot` / `children` / `cellRenderer` /
- *   `headerRenderer` / `filterIconSlot` / `expandSlot` 拓展属性；
- * - `pagination` 传入即渲染分页，并回写 `pageSize` / `currentPage`（与原包一致），
- *   同时对外抛出 `page-size-change` / `page-current-change`；
- * - `adaptive` + `adaptiveConfig` 自适应视口高度（`setAdaptive` 同步计算）；
- * - `loading` / `loadingConfig` 走全局 `v-loading` 指令；
- * - 未声明的属性与事件经 `$attrs` 透传给 `el-table`；
- * - 暴露 `getTableRef` / `getTableDoms` / `setAdaptive` / `setHeaderSticky` 方法。
- * 原包类型声明已存档于 docs/vendor-ref/table-types/。
+ * HTable（壶天自研表格组件）：围绕 `el-table` 的薄封装，组件签名与行为对齐原包 PureTable 3.3.0。
+ * 拓展能力：`columns` 的 hide / slot / cellRenderer / children 等列属性、`pagination` 分页（回写页码与
+ * 每页条数）、`adaptive` 自适应高度、`loading` 加载动画；未声明的属性与事件经 `$attrs` 透传给 `el-table`。
+ * 对外暴露 getTableRef / getTableDoms / setAdaptive / setHeaderSticky。原包类型声明存档于 docs/vendor-ref/table-types/。
  */
 import {
   type PropType,
@@ -112,21 +103,23 @@ export default defineComponent({
     /** el-table 的 ref，功能同 element-plus 的 Table 实例 */
     const getTableRef = () => unref(tableRef);
 
-    /** 获取 el-table 内部的 dom 引用，如 `tableWrapper` */
+    /**
+     * 获取 el-table 内部的 dom 引用，如 `tableWrapper`；取不到时回退为 el-table 根节点。
+     * `$refs` 是只读代理，不能往里写，所以回退值放在返回的新对象上
+     */
     const getTableDoms = () => {
       const elTable = getTableRef() as any;
       const doms = elTable?.$refs ?? {};
-      if (!doms.tableWrapper && elTable?.$el) {
-        doms.tableWrapper = elTable.$el;
-      }
-      return doms;
+      return !doms.tableWrapper && elTable?.$el
+        ? { ...doms, tableWrapper: elTable.$el }
+        : doms;
     };
 
     /** 自适应视口高度：height = 视口高 - 表格距顶部距离 - offsetBottom */
     const setAdaptive = async () => {
       await nextTick();
       if (!props.adaptive) return;
-      const tableWrapper = getTableDoms()?.tableWrapper as HTMLElement;
+      const tableWrapper = getTableDoms().tableWrapper as HTMLElement;
       if (!tableWrapper) return;
       const offsetBottom = props.adaptiveConfig?.offsetBottom ?? 96;
       tableWrapper.style.height = `${
@@ -139,11 +132,10 @@ export default defineComponent({
     /** 表头吸顶（fixHeader !== false 时生效，行为对齐原包） */
     const setHeaderSticky = async (zIndex = 3) => {
       await nextTick();
+      const { tableHeaderRef, tableWrapper } = getTableDoms();
       const headerDom =
-        getTableDoms()?.tableHeaderRef?.$el ??
-        (getTableDoms()?.tableWrapper as HTMLElement)?.querySelector(
-          ".el-table__header-wrapper"
-        );
+        tableHeaderRef?.$el ??
+        tableWrapper?.querySelector(".el-table__header-wrapper");
       if (!headerDom) return;
       headerDom.style.position = "sticky";
       headerDom.style.top = "0";
@@ -164,12 +156,12 @@ export default defineComponent({
 
     /** 加载动画文案、图标等属性 */
     const loadingAttrs = computed(() => {
-      const { text, spinner, svg, svgViewBox } = props.loadingConfig ?? {};
+      const { text, spinner, svg, viewBox } = props.loadingConfig ?? {};
       return {
         "element-loading-text": text,
         "element-loading-spinner": spinner,
         "element-loading-svg": svg,
-        "element-loading-svg-view-box": svgViewBox
+        "element-loading-svg-view-box": viewBox
       };
     });
 
@@ -208,8 +200,7 @@ export default defineComponent({
         ...restColumn
       } = column;
 
-      if (typeof hide === "function" && hide(props)) return null;
-      if (typeof hide === "boolean" && hide) return null;
+      if (typeof hide === "function" ? hide(attrs) : hide === true) return null;
 
       /** 单元格/表头渲染器的公共入参，与原包 TableColumnRenderer 对齐 */
       const withScope = (scope: any) => ({
@@ -275,7 +266,7 @@ export default defineComponent({
         ? h(
             ElPagination,
             Object.assign({}, attrs, props.pagination, {
-              class: "ht-pagination",
+              class: ["ht-pagination", props.pagination.class],
               style: paginationStyle.value,
               layout:
                 props.pagination.layout ??
@@ -314,10 +305,14 @@ export default defineComponent({
       props.adaptiveConfig?.timeout ?? 60
     );
 
+    /** 已卸载：拦住排在 `nextTick` 里的挂载回调，避免监听在摘除之后才挂上 */
+    let unmounted = false;
+
     onMounted(() => {
       nextTick(() => {
+        if (unmounted) return;
         if (props.rowHoverBgColor) {
-          getTableDoms()?.tableWrapper?.style.setProperty(
+          getTableDoms().tableWrapper?.style.setProperty(
             "--el-table-row-hover-bg-color",
             props.rowHoverBgColor,
             "important"
@@ -326,21 +321,16 @@ export default defineComponent({
         if (props.adaptive) {
           setAdaptive();
           window.addEventListener("resize", resizeHandler);
-          if (
-            Reflect.has(props.adaptiveConfig ?? {}, "fixHeader") &&
-            !(props.adaptiveConfig ?? {}).fixHeader
-          ) {
-            return;
-          }
+          if (props.adaptiveConfig?.fixHeader === false) return;
           setHeaderSticky(props.adaptiveConfig?.zIndex ?? 3);
         }
       });
     });
 
+    // 摘除不加条件：与挂载时的添加保持对称，避免运行期关闭 adaptive 后监听残留
     onBeforeUnmount(() => {
-      if (props.adaptive) {
-        window.removeEventListener("resize", resizeHandler);
-      }
+      unmounted = true;
+      window.removeEventListener("resize", resizeHandler);
     });
 
     /**

@@ -1,9 +1,7 @@
 /**
- * 壶天自研工具集（ht-utils）
- *
- * 用于替代原 pure-admin 模板引入的工具库依赖。除 useDark / useResizeObserver
- * 外均为手写实现，每个函数头部均注明与原包对齐的签名与行为；原包类型声明已
- * 存档于 docs/vendor-ref/ 目录，可随时对照。
+ * 壶天自研工具集（ht-utils）：替代 pure-admin 模板原先引入的 utils 依赖，命名与签名对齐
+ * pure-admin utils@2.6.2，仅保留项目实际用到的部分；行为以原包为准，个别已知缺陷做了修正，
+ * 差异在相应函数注释里注明。原包类型声明存档于 docs/vendor-ref/。
  */
 
 import {
@@ -11,10 +9,10 @@ import {
   computed,
   getCurrentInstance,
   getCurrentScope,
+  type MaybeRefOrGetter,
   nextTick,
   onBeforeMount,
   onScopeDispose,
-  onUnmounted,
   shallowRef,
   toValue,
   watch,
@@ -22,19 +20,17 @@ import {
   type Ref
 } from "vue";
 
-/* -------------------------------------------------------------------------- */
-/*                                  类型声明                                   */
-/* -------------------------------------------------------------------------- */
+/* -------------------------------- 类型声明 -------------------------------- */
 
-/** 对齐原包 `FunctionArgs` */
+/** `FunctionArgs` —— debounce / throttle 的函数入参约束（内部使用） */
 type FunctionArgs<Args extends any[] = any[], Return = void> = (
   ...args: Args
 ) => Return;
 
-/** 对齐原包 `Target` */
+/** `Target` —— 超链接的打开方式，同 `<a>` 的 `target` */
 export type Target = "_blank" | "_self" | "_parent" | "_top" | "framename";
 
-/** 对齐原包 `ProxyStorage` */
+/** `ProxyStorage` —— Storage 代理接口，`setItem` / `getItem` 的值经 JSON 序列化 */
 export interface ProxyStorage {
   setItem<T>(k: string, v: T): void;
   getItem<T>(k: string): T;
@@ -42,151 +38,128 @@ export interface ProxyStorage {
   clear(): void;
 }
 
-/** 对齐原包 `SvgInfo` */
+/** `SvgInfo` —— `getSvgInfo` 的返回：`width` / `height` 取自 `viewBox` 第三、四项，`body` 为全部 `<path>` 的 `outerHTML` */
 export interface SvgInfo {
-  /** SVG 的宽度，基于 `viewBox` 属性的第三个值 */
   width: number;
-  /** SVG 的高度，基于 `viewBox` 属性的第四个值 */
   height: number;
-  /** SVG 中所有 `<path>` 元素的 `outerHTML` 连接而成的字符串 */
   body: string;
 }
 
-/** 对齐原包 `DarkOptions` */
+/** `DarkOptions` —— `useDark` 入参：`className` 检测的类名（默认 `dark`），`selector` 监听 `html`（默认）或 `body` */
 export interface DarkOptions {
-  /** 切换的主题类名，默认 `dark` */
   className?: string;
-  /** 监听的节点，`html`（默认）或 `body` */
   selector?: "html" | "body";
 }
 
-/** useDark 的返回结构，对齐原包 */
+/** `DarkReturn` —— `useDark` 返回：`isDark` 当前是否暗色，`toggleDark` 明暗切换 */
 export interface DarkReturn {
-  /** 当前整个网页是否处于暗色(`dark`)主题 */
   isDark: ShallowRef<boolean>;
-  /** `dark`和非`dark`主题间相互切换 */
   toggleDark: () => void;
 }
 
-/** 对齐原包 `UseResizeObserverOptions` */
+/** `UseResizeObserverOptions` —— `useResizeObserver` 入参：`time` 防抖时长（默认 40 毫秒）、`box` 观察的盒模型（默认 `content-box`）、`immediate` 挂载后是否立即回调（默认 `true`） */
 export interface UseResizeObserverOptions {
-  /** 内置防抖时长，单位毫秒，默认 `40` */
   time?: number;
-  /** 观察的盒子模型，默认 `content-box` */
   box?: "content-box" | "border-box";
-  /** 首次是否立即执行回调，默认 `true` */
   immediate?: boolean;
 }
 
-/** 对齐原包 `SFCWithInstall` */
+/** `SFCWithInstall<T>` —— 带 `install` 方法、可直接 `app.use` 的组件 */
 export type SFCWithInstall<T> = T & Plugin;
 
-/* -------------------------------------------------------------------------- */
-/*                                基础类型判断                                 */
-/* -------------------------------------------------------------------------- */
+/* ------------------------------ 基础类型判断 ------------------------------ */
 
 const toString = Object.prototype.toString;
 
-/** `Object.prototype.toString.call(val) === "[object type]"` 的封装（内部实现） */
+/** `is(val, type): boolean` —— `Object.prototype.toString` 的结果是否为 `[object type]`（内部实现） */
 function is(val: unknown, type: string): boolean {
   return toString.call(val) === `[object ${type}]`;
 }
 
-/** 是否是 `null`（内部实现） */
-function isNull(val: unknown): val is null {
-  return val === null;
-}
-
-/** 是否是 `undefined`（内部实现） */
-function isUnDef(val?: unknown): val is undefined {
-  return typeof val === "undefined";
-}
-
-/** 是否是 `null` 或者 `undefined`（内部实现） */
-export function isNullOrUnDef(val: unknown): val is null | undefined {
-  return isNull(val) || isUnDef(val);
-}
-
-/** 是否是对象 `object`。签名与行为对齐原包 `isObject` */
+/** `isObject(val): boolean` —— 是否为对象（`[object Object]`） */
 export function isObject(val: any): val is Record<any, any> {
   return val !== null && is(val, "Object");
 }
 
-/** 是否是 `number`。签名与行为对齐原包 `isNumber` */
+/** `isNumber(val): boolean` —— 是否为 `number` */
 export function isNumber(val: unknown): val is number {
   return is(val, "Number");
 }
 
-/** 是否是 `string`。签名与行为对齐原包 `isString` */
+/** `isString(val): boolean` —— 是否为 `string` */
 export function isString(val: unknown): val is string {
   return is(val, "String");
 }
 
-/** 是否是 `Function`。签名与行为对齐原包 `isFunction` */
+/** `isFunction(val): boolean` —— 是否为函数 */
 export function isFunction(val: unknown): val is Function {
   return typeof val === "function";
 }
 
-/** 是否是 `Boolean`。签名与行为对齐原包 `isBoolean` */
+/** `isBoolean(val): boolean` —— 是否为 `boolean` */
 export function isBoolean(val: unknown): val is boolean {
   return is(val, "Boolean");
 }
 
-/** 是否是 `Array`。签名与行为对齐原包 `isArray` */
+/** `isArray(val): boolean` —— 是否为数组 */
 export function isArray(val: any): val is Array<any> {
-  return val && Array.isArray(val);
+  return Array.isArray(val);
 }
 
-/**
- * 是否为空，针对 `数组`、`对象`、`字符串`、`new Map()`、`new Set()` 进行判断。
- * 签名与行为对齐原包 `isEmpty`
- */
-export function isEmpty<T = unknown>(val: T): boolean {
-  if (isArray(val) || isString(val)) return (val as any).length === 0;
-  if (val instanceof Map || val instanceof Set) return val.size === 0;
-  if (isObject(val)) return Object.keys(val).length === 0;
-  return false;
-}
-
-/**
- * 是否为空：在 `isEmpty` 基础上，`null`、`undefined` 直接返回 `true`。
- * 签名与行为对齐原包 `isAllEmpty`
- */
+/** `isAllEmpty(val): boolean` —— 是否为空：`null` / `undefined`、空数组、空字符串、空 `Map` / `Set`、无自有键的对象均为 `true` */
 export function isAllEmpty<T = unknown>(val: T): boolean {
-  return !!(isEmpty(val) || isNullOrUnDef(val));
+  if (val === null || val === undefined) return true;
+  if (isString(val) || Array.isArray(val)) return val.length === 0;
+  if (val instanceof Map || val instanceof Set) return val.size === 0;
+  return isObject(val) && Object.keys(val).length === 0;
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                 深度对比                                    */
-/* -------------------------------------------------------------------------- */
+/* -------------------------------- 深度对比 -------------------------------- */
 
-/** 判断两个数组是否相等（逐项调用 isEqual，内部实现，对齐原包 `isEqualArray`） */
-function isEqualArray(arr: any, other: any): boolean {
-  if (!arr || !other) return false;
-  const { length } = arr;
-  if (length !== other.length) return false;
-  for (let i = 0; i < length; i++) {
-    if (!isEqual(arr[i], other[i])) return false;
-  }
-  return true;
+/** 非 `null`、非数组的 `object`（内部实现） */
+const isObjectLike = (val: unknown): val is Record<string, unknown> =>
+  val !== null && typeof val === "object" && !Array.isArray(val);
+
+/** 登记正在比较的对象对：再次命中说明成环，视为相等；比较完成后撤销登记（内部实现） */
+function compareOnStack(
+  a: object,
+  b: object,
+  seen: WeakMap<object, unknown>,
+  compare: () => boolean
+): boolean {
+  if (seen.has(a)) return seen.get(a) === b;
+  seen.set(a, b);
+  const equal = compare();
+  seen.delete(a);
+  return equal;
 }
 
 /**
- * 判断两者是否相等（深度对比：对象、数组、Date、RegExp、Map、Set、函数逐项比较）。
- * 签名与行为对齐原包 `isEqual`
+ * `isEqual(a, b): boolean` —— 深度对比：`Date`、`RegExp`、`Map`、`Set`、数组、普通对象逐项比较，
+ * 基础类型与函数按引用比较，类型不同的对象恒不相等；`WeakMap` 防循环引用
  */
-export function isEqual(a: unknown, b: unknown, seen = new WeakMap()): boolean {
+export function isEqual(a: unknown, b: unknown): boolean {
+  return deepEqual(a, b, new WeakMap());
+}
+
+function deepEqual(
+  a: unknown,
+  b: unknown,
+  seen: WeakMap<object, unknown>
+): boolean {
   if (a === b) return true;
   if (a instanceof Date && b instanceof Date)
     return a.getTime() === b.getTime();
   if (a instanceof RegExp && b instanceof RegExp)
     return a.toString() === b.toString();
   if (a instanceof Map && b instanceof Map) {
-    if (a.size !== b.size) return false;
-    for (const [key, value] of a) {
-      if (!b.has(key) || !isEqual(value, b.get(key), seen)) return false;
-    }
-    return true;
+    return compareOnStack(a, b, seen, () => {
+      if (a.size !== b.size) return false;
+      for (const [key, value] of a) {
+        if (!b.has(key) || !deepEqual(value, b.get(key), seen)) return false;
+      }
+      return true;
+    });
   }
   if (a instanceof Set && b instanceof Set) {
     if (a.size !== b.size) return false;
@@ -195,46 +168,41 @@ export function isEqual(a: unknown, b: unknown, seen = new WeakMap()): boolean {
     }
     return true;
   }
-  if (Array.isArray(a) && Array.isArray(b)) return isEqualArray(a, b);
-  if (
-    a !== null &&
-    typeof a === "object" &&
-    !Array.isArray(a) &&
-    b !== null &&
-    typeof b === "object" &&
-    !Array.isArray(b)
-  ) {
-    if (seen.has(a as object)) return seen.get(a) === b;
-    seen.set(a as object, b);
-    const keysA = Object.keys(a as object);
-    const keysB = Object.keys(b as object);
-    if (keysA.length !== keysB.length) return false;
-    for (const key of keysA) {
-      if (
-        !Object.prototype.hasOwnProperty.call(b, key) ||
-        !isEqual((a as any)[key], (b as any)[key], seen)
-      )
-        return false;
-    }
-    return true;
+  if (Array.isArray(a) && Array.isArray(b)) {
+    return compareOnStack(a, b, seen, () => {
+      if (a.length !== b.length) return false;
+      for (let i = 0; i < a.length; i++) {
+        if (!deepEqual(a[i], b[i], seen)) return false;
+      }
+      return true;
+    });
   }
-  if (isFunction(a) && isFunction(b))
-    return a === b || a.toString() === b.toString();
+  // 类型标签不同的对象（如 `{}` 与 `new Date()`、`Map` 与 `Set`）直接判不等，不落到按自有键比较
+  if (
+    isObjectLike(a) &&
+    isObjectLike(b) &&
+    toString.call(a) === toString.call(b)
+  ) {
+    return compareOnStack(a, b, seen, () => {
+      const keys = Object.keys(a);
+      if (keys.length !== Object.keys(b).length) return false;
+      return keys.every(
+        key =>
+          Object.prototype.hasOwnProperty.call(b, key) &&
+          deepEqual(a[key], b[key], seen)
+      );
+    });
+  }
   return false;
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                 防抖/节流                                   */
-/* -------------------------------------------------------------------------- */
+/* ------------------------------- 防抖/节流 -------------------------------- */
 
-/** 延迟函数，默认 `20` 毫秒。签名与行为对齐原包 `delay` */
+/** `delay(timeout = 20): Promise<unknown>` —— 延迟 `timeout` 毫秒后 resolve */
 export const delay = (timeout = 20): Promise<unknown> =>
   new Promise(resolve => setTimeout(resolve, timeout));
 
-/**
- * 防抖函数，默认 `200` 毫秒；`immediate` 为 `true` 时首次立即执行。
- * 签名与行为对齐原包 `debounce`
- */
+/** `debounce(fn, timeout = 200, immediate = false): () => void` —— 防抖：每次调用重置计时器，`timeout` 毫秒内无新调用才执行；`immediate` 为 `true` 时首次立即执行、其后 `timeout` 毫秒内的调用丢弃；返回的函数透传 `this` 与参数 */
 export const debounce = <T extends FunctionArgs>(
   fn: T,
   timeout = 200,
@@ -252,7 +220,7 @@ export const debounce = <T extends FunctionArgs>(
   };
 };
 
-/** 节流函数，默认 `1000` 毫秒。签名与行为对齐原包 `throttle` */
+/** `throttle(fn, timeout = 1000): () => void` —— 节流：调用后延迟 `timeout` 毫秒执行一次，执行前的新调用直接丢弃（不补发）；返回的函数透传 `this` 与参数 */
 export const throttle = <T extends FunctionArgs>(
   fn: T,
   timeout = 1000
@@ -267,20 +235,17 @@ export const throttle = <T extends FunctionArgs>(
   };
 };
 
-/* -------------------------------------------------------------------------- */
-/*                                  深拷贝                                     */
-/* -------------------------------------------------------------------------- */
+/* --------------------------------- 深拷贝 --------------------------------- */
 
-const _toString = Object.prototype.toString;
-
-function _cloneValue(val: any): any {
+/** `cloneDeep(val): any` —— 深拷贝；支持对象（保留原型）、数组、`Date`、`RegExp`、`Set`、`Map`、类数组，其余类型原样返回 */
+export function cloneDeep(val: any): any {
   if (!val) return val;
-  switch (_toString.call(val)) {
+  switch (toString.call(val)) {
     case "[object Object]": {
       const ret = Object.create(Object.getPrototypeOf(val));
       for (const key in val) {
         if (Object.prototype.hasOwnProperty.call(val, key)) {
-          ret[key] = _deepClone(val[key], true);
+          ret[key] = cloneDeep(val[key]);
         }
       }
       return ret;
@@ -291,19 +256,20 @@ function _cloneValue(val: any): any {
     case "[object Array]":
     case "[object Arguments]": {
       const ret: any[] = [];
-      val.forEach((item: any) => ret.push(_deepClone(item, true)));
+      // 借用数组的 forEach：类数组（如 Arguments）自身没有该方法
+      Array.prototype.forEach.call(val, (item: any) =>
+        ret.push(cloneDeep(item))
+      );
       return ret;
     }
     case "[object Set]": {
       const ret = new val.constructor();
-      val.forEach((item: any) => ret.add(_deepClone(item, true)));
+      val.forEach((item: any) => ret.add(cloneDeep(item)));
       return ret;
     }
     case "[object Map]": {
       const ret = new val.constructor();
-      val.forEach((item: any, key: any) =>
-        ret.set(key, _deepClone(item, true))
-      );
+      val.forEach((item: any, key: any) => ret.set(key, cloneDeep(item)));
       return ret;
     }
     default:
@@ -311,50 +277,36 @@ function _cloneValue(val: any): any {
   }
 }
 
-function _deepClone(val: any, deep: boolean): any {
-  return deep ? _cloneValue(val) : val;
-}
+/* ------------------------------- 字符串截取 ------------------------------- */
 
-/** 深拷贝（支持 Object/Array/Date/RegExp/Set/Map/Arguments）。签名与行为对齐原包 `cloneDeep` */
-export function cloneDeep(val: any): any {
-  return val && _cloneValue(val);
-}
-
-/* -------------------------------------------------------------------------- */
-/*                                字符串截取                                   */
-/* -------------------------------------------------------------------------- */
-
-/** 截取指定字符前面的值（找不到返回空串）。签名与行为对齐原包 `subBefore` */
+/** `subBefore(val, character): string` —— 截取首个 `character` 之前的部分；`character` 不是字符串或找不到时返回空串 */
 export function subBefore(val: string, character: string): string {
   return isString(character) ? val.substring(0, val.indexOf(character)) : "";
 }
 
-/** 截取指定字符后面的值（找不到返回空串）。签名与行为对齐原包 `subAfter` */
+/** `subAfter(val, character): string` —— 截取最后一个 `character` 之后的部分；找不到时返回整串，`character` 不是字符串时返回空串 */
 export function subAfter(val: string, character: string): string {
   return isString(character)
-    ? val.substring(val.lastIndexOf(character) + character.length, val.length)
+    ? val.substring(val.lastIndexOf(character) + character.length)
     : "";
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                   正则                                      */
-/* -------------------------------------------------------------------------- */
+/* ---------------------------------- 正则 ---------------------------------- */
 
-/** `url` 链接正则校验。签名与行为对齐原包 `isUrl` */
+/** 链接正则（照搬原包） */
+const urlReg = new RegExp(
+  "^(?:(https?|ftp|rtsp|mms|ws|wss)://)?(?:\\S+(?::\\S*)?@)?(?:(?:localhost)|(?:[1-9]\\d{0,2}(?:\\.\\d{1,3}){3})|(?:\\[[0-9a-fA-F:]+\\])|(?:(?:[a-zA-Z0-9-_]+\\.)+[a-zA-Z]{2,63}))(?::\\d{1,5})?(?:[/?#]\\S*)?$",
+  "i"
+);
+
+/** `isUrl(value): boolean` —— 是否为合法链接（协议、主机、端口、路径整体校验，协议可省略） */
 export function isUrl(value: string): boolean {
-  const reg =
-    "^(?:(https?|ftp|rtsp|mms|ws|wss)://)?(?:\\S+(?::\\S*)?@)?(?:(?:localhost)|(?:[1-9]\\d{0,2}(?:\\.\\d{1,3}){3})|(?:\\[[0-9a-fA-F:]+\\])|(?:(?:[a-zA-Z0-9-_]+\\.)+[a-zA-Z]{2,63}))(?::\\d{1,5})?(?:[/?#]\\S*)?$";
-  return new RegExp(reg, "i").test(value);
+  return urlReg.test(value);
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                   数组                                      */
-/* -------------------------------------------------------------------------- */
+/* ---------------------------------- 数组 ---------------------------------- */
 
-/**
- * 判断母体数组 `m` 是否包含子体数组 `c` 中的全部元素（严格相等比较）。
- * 签名与行为对齐原包 `isIncludeAllChildren`
- */
+/** `isIncludeAllChildren(c, m): boolean` —— 子体数组 `c` 的每个元素是否都在母体数组 `m` 中（严格相等） */
 export function isIncludeAllChildren(
   c: Array<string | number | unknown>,
   m: Array<unknown>
@@ -362,14 +314,11 @@ export function isIncludeAllChildren(
   return c.every(item => m.some(other => other === item));
 }
 
-/** 获取由基本数据类型组成的数组交集。签名与行为对齐原包 `intersection` */
+/** `intersection(...rest): any[]` —— 多个数组的基本类型交集；只传一个数组时原样返回该数组 */
 export const intersection = (...rest: any[]): any[] =>
-  [...rest].reduce((a, b) => a.filter(item => b.includes(item)));
+  rest.reduce((a, b) => a.filter(item => b.includes(item)));
 
-/**
- * 从对象数组中获取指定 `key` 组成的新数组，会去重也会去除不存在的值。
- * 签名与行为对齐原包 `getKeyList`
- */
+/** `getKeyList(arr, key, duplicates = true): any[]` —— 取对象数组各项的 `key` 值组成新数组，跳过 `null` / `undefined`；`duplicates` 为 `true` 时去重 */
 export function getKeyList(arr: any, key: string, duplicates = true): any[] {
   const list: any[] = [];
   for (const item of arr) {
@@ -378,40 +327,27 @@ export function getKeyList(arr: any, key: string, duplicates = true): any[] {
   return duplicates ? Array.from(new Set(list)) : list;
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                    DOM                                     */
-/* -------------------------------------------------------------------------- */
+/* ---------------------------------- DOM ----------------------------------- */
 
-const isServer = typeof window === "undefined";
-const isClient = !isServer;
 const hasDocument = typeof document !== "undefined";
 
-/** 判断元素是否存在指定类名。签名与行为对齐原包 `hasClass` */
+/** `hasClass(element, name): boolean` —— 元素是否含有类名 `name`（按完整类名匹配；原包按子串匹配，会误判同名前缀的类） */
 export const hasClass = (
   element: HTMLElement | Element,
   name: string
-): boolean =>
-  hasDocument
-    ? !!element?.className.match(new RegExp("(\\s|^)" + name + "(\\s|$)"))
-    : false;
+): boolean => !!element?.classList.contains(name);
 
-/**
- * 是否向当前元素添加/移除指定类名（不传 `element` 默认 `document.body`）。
- * 签名与行为对齐原包 `toggleClass`
- */
+/** `toggleClass(bool, name, element = document.body): void` —— `bool` 为 `true` 给元素加类名 `name`，否则移除，按完整类名匹配；不传 `element` 时作用于 `document.body` */
 export const toggleClass = (
   bool: boolean,
   name: string,
   element?: HTMLElement | Element
 ): void => {
   if (!hasDocument) return;
-  const target = element || document.body;
-  const { className } = target;
-  const replaced = className.replace(name, "").trim().split(/\s+/).join(" ");
-  target.className = bool ? `${replaced} ${name}` : replaced;
+  (element || document.body).classList.toggle(name, bool);
 };
 
-/** 创建超链接并点击，默认 `_blank`。签名与行为对齐原包 `openLink` */
+/** `openLink(href, target = "_blank"): void` —— 创建 `<a>` 并触发点击以打开链接，自带 `rel="noreferrer noopener"` */
 export const openLink = (href: string, target: Target = "_blank"): void => {
   if (!hasDocument) return;
   const link = document.createElement("a");
@@ -426,11 +362,9 @@ export const openLink = (href: string, target: Target = "_blank"): void => {
   link.remove();
 };
 
-/* -------------------------------------------------------------------------- */
-/*                                  颜色处理                                   */
-/* -------------------------------------------------------------------------- */
+/* -------------------------------- 颜色处理 -------------------------------- */
 
-/** `hex` 转 `rgb` 数组（内部实现，对齐原包 `hexToRgb`） */
+/** `hexToRgb(str): number[]` —— `#rrggbb` 转为 `[r, g, b]`（内部实现） */
 function hexToRgb(str: string): Array<number> {
   const colors = str.replace("#", "").match(/../g);
   const rgb: number[] = [];
@@ -440,7 +374,7 @@ function hexToRgb(str: string): Array<number> {
   return rgb;
 }
 
-/** `rgb` 转 `hex` 字符串（内部实现，对齐原包 `rgbToHex`） */
+/** `rgbToHex(r, g, b): string` —— `[r, g, b]` 转为 `#rrggbb`，个位补零（内部实现） */
 function rgbToHex(r: number, g: number, b: number): string {
   const hexArr = [r.toString(16), g.toString(16), b.toString(16)];
   for (let i = 0; i < 3; i++) {
@@ -449,7 +383,7 @@ function rgbToHex(r: number, g: number, b: number): string {
   return `#${hexArr.join("")}`;
 }
 
-/** 颜色值加深，`level` 取值 0~1。签名与行为对齐原包 `darken` */
+/** `darken(color, level): string` —— 加深 `hex` 颜色，`level` 取 0~1，逐通道 `Math.floor(v * (1 - level))` */
 export const darken = (color: string, level: number): string => {
   const rgb = hexToRgb(color);
   for (let i = 0; i < 3; i++) {
@@ -458,7 +392,7 @@ export const darken = (color: string, level: number): string => {
   return rgbToHex(rgb[0], rgb[1], rgb[2]);
 };
 
-/** 颜色值变浅，`level` 取值 0~1。签名与行为对齐原包 `lighten` */
+/** `lighten(color, level): string` —— 变浅 `hex` 颜色，`level` 取 0~1，逐通道 `Math.floor((255 - v) * level + v)` */
 export const lighten = (color: string, level: number): string => {
   const rgb = hexToRgb(color);
   for (let i = 0; i < 3; i++) {
@@ -467,19 +401,15 @@ export const lighten = (color: string, level: number): string => {
   return rgbToHex(rgb[0], rgb[1], rgb[2]);
 };
 
-/* -------------------------------------------------------------------------- */
-/*                                    SVG                                     */
-/* -------------------------------------------------------------------------- */
+/* ---------------------------------- SVG ----------------------------------- */
 
-/**
- * 解析 SVG 字符串，提取 `viewBox` 中的宽高及所有 `<path>` 拼接结果。
- * 签名与行为对齐原包 `getSvgInfo`（缺少 `viewBox` 时抛错，与原包一致）
- */
+/** `getSvgInfo(svgStr): SvgInfo` —— 解析 SVG 字符串，取 `viewBox` 的宽高与全部 `<path>`；解析不出 `<svg>` 时原样返回入参，缺 `viewBox` 时抛错 */
 export function getSvgInfo(svgStr: string): SvgInfo {
-  if (!hasDocument) return svgStr as unknown as SvgInfo;
-  const svgElement = new DOMParser()
-    .parseFromString(svgStr, "image/svg+xml")
-    .querySelector("svg");
+  const svgElement = hasDocument
+    ? new DOMParser()
+        .parseFromString(svgStr, "image/svg+xml")
+        .querySelector("svg")
+    : null;
   if (!svgElement) return svgStr as unknown as SvgInfo;
   const viewBox = svgElement.getAttribute("viewBox");
   if (!viewBox)
@@ -493,17 +423,15 @@ export function getSvgInfo(svgStr: string): SvgInfo {
   return { width, height, body };
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                 剪贴板/设备                                 */
-/* -------------------------------------------------------------------------- */
+/* ------------------------------ 剪贴板/设备 ------------------------------- */
 
 /**
- * 将文本复制到剪贴板（`execCommand` 方案，非安全上下文亦可回退）。
- * 签名与行为对齐原包 `copyTextToClipboard`
+ * `copyTextToClipboard(input, { target = document.body }): boolean` —— 借临时 `textarea` 调 `execCommand("copy")`
+ * 复制文本，结束后还原选区与焦点；返回是否复制成功
  */
 export function copyTextToClipboard(
   input: string,
-  { target }: { target?: HTMLElement } = {}
+  { target = document.body }: { target?: HTMLElement } = {}
 ): boolean {
   const textarea = document.createElement("textarea");
   const activeElement = document.activeElement;
@@ -518,16 +446,11 @@ export function copyTextToClipboard(
   if (selection && selection.rangeCount > 0) {
     range = selection.getRangeAt(0);
   }
-  target?.append(textarea);
+  target.append(textarea);
   textarea.select();
   textarea.selectionStart = 0;
   textarea.selectionEnd = input.length;
-  let isSuccess = false;
-  try {
-    isSuccess = document.execCommand("copy");
-  } catch (error: any) {
-    throw new Error(error.message);
-  }
+  const isSuccess = document.execCommand("copy");
   textarea.remove();
   if (range && selection) {
     selection.removeAllRanges();
@@ -539,27 +462,18 @@ export function copyTextToClipboard(
   return isSuccess;
 }
 
-/** 检测设备类型（移动端返回 `true`）。签名与行为对齐原包 `deviceDetection` */
-export const deviceDetection = (): boolean => {
-  if (!hasDocument) return;
-  const ua = navigator.userAgent.toLowerCase();
-  const matchUa = (pattern: string): boolean =>
-    new RegExp(pattern, "i").test(ua);
-  return (
-    matchUa("midp") ||
-    matchUa("ucweb") ||
-    matchUa("android") ||
-    matchUa("iphone os") ||
-    matchUa("windows ce") ||
-    matchUa("windows mobile")
-  );
-};
+/** 移动端 UA 特征，7 条规则照搬原包 */
+const mobileUaReg =
+  /midp|ucweb|android|iphone os|windows ce|rv:1.2.3.4|windows mobile/i;
 
-/* -------------------------------------------------------------------------- */
-/*                                  存储                                       */
-/* -------------------------------------------------------------------------- */
+/** `deviceDetection(): boolean` —— 是否为移动端设备（按 UA 判断） */
+export const deviceDetection = (): boolean =>
+  hasDocument ? mobileUaReg.test(navigator.userAgent) : false;
 
-class sessionStorageProxy implements ProxyStorage {
+/* ---------------------------------- 存储 ---------------------------------- */
+
+/** `Storage` 代理：值统一经 JSON 序列化存取，兼容 `responsive-storage` 的存取格式（内部实现） */
+class LocalStorageProxy implements ProxyStorage {
   protected storage: Storage;
 
   constructor(storageModel: Storage) {
@@ -591,30 +505,19 @@ class sessionStorageProxy implements ProxyStorage {
   }
 }
 
-class localStorageProxy extends sessionStorageProxy implements ProxyStorage {
-  constructor(localStorage: Storage) {
-    super(localStorage);
-  }
-}
+/** `storageLocal(): LocalStorageProxy` —— `localStorage` 代理，值经 JSON 序列化存取；无 `window` 时以空串兜底，读写均为空操作 */
+export const storageLocal = (): LocalStorageProxy =>
+  typeof window === "undefined"
+    ? new LocalStorageProxy("" as any)
+    : new LocalStorageProxy(window.localStorage);
 
-/**
- * 操作本地 `localStorage`（值 JSON 序列化存取，与 `responsive-storage` 兼容）。
- * 签名与行为对齐原包 `storageLocal`
- */
-export const storageLocal = (): localStorageProxy =>
-  isClient
-    ? new localStorageProxy(window.localStorage)
-    : new localStorageProxy("" as any);
+/* ---------------------------------- 数值 ---------------------------------- */
 
-/* -------------------------------------------------------------------------- */
-/*                                  数值                                       */
-/* -------------------------------------------------------------------------- */
-
-/** 求数字数组总和（空数组返回 0）。签名与行为对齐原包 `sum` */
+/** `sum(list): number` —— 数字数组求和；非数组或空数组返回 `0` */
 export const sum = (list: Array<number>): number =>
   isArray(list) && list.length > 0 ? list.reduce((a, b) => a + b) : 0;
 
-/** 字节数转可读字符串，默认保留两位。签名与行为对齐原包 `formatBytes` */
+/** `formatBytes(bytes, decimals = 2): string` —— 字节数转为带单位的可读字符串，保留 `decimals` 位小数（传 `0` 按 `2` 处理） */
 export const formatBytes = (bytes: number, decimals?: number): string => {
   if (bytes === 0) return "0 Bytes";
   const k = 1024;
@@ -624,104 +527,65 @@ export const formatBytes = (bytes: number, decimals?: number): string => {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 };
 
-/* -------------------------------------------------------------------------- */
-/*                              Vue 组件相关                                   */
-/* -------------------------------------------------------------------------- */
+/* ------------------------------ Vue 组件相关 ------------------------------ */
 
-/**
- * 向组件中添加 `install` 方法，使其既可以使用 `app.component` 注册又可以使用
- * `app.use` 安装。签名与行为对齐原包 `withInstall`
- */
-export const withInstall = <T, E extends Record<string, any>>(
-  main: T,
-  extra?: E
-): SFCWithInstall<T> & E => {
-  (main as SFCWithInstall<T>).install = (app): void => {
-    for (const comp of [main, ...Object.values(extra ?? {})]) {
-      app.component((comp as any).name, comp as any);
-    }
-  };
-  if (extra) {
-    for (const [key, value] of Object.entries(extra)) {
-      (main as any)[key] = value;
-    }
-  }
-  return main as SFCWithInstall<T> & E;
+/** `withInstall(main): SFCWithInstall<T>` —— 给组件挂上 `install`，供 `app.use` 时按组件 `name` 全局注册 */
+export const withInstall = <T>(main: T): SFCWithInstall<T> => {
+  (main as SFCWithInstall<T>).install = app =>
+    app.component((main as { name: string }).name, main as any);
+  return main as SFCWithInstall<T>;
 };
 
-/**
- * 获取已经注册的全局属性对象 `globalProperties`（需在 setup 上下文中调用）。
- * 签名与行为对齐原包 `useGlobal`
- */
+/** `useGlobal<T>(): T` —— 取当前实例所属应用的 `globalProperties`（需在 `setup` 内调用） */
 export function useGlobal<T>(): T {
-  const { appContext } = getCurrentInstance()!;
-  const globalProperties = appContext.config.globalProperties;
-  return globalProperties as T;
+  return getCurrentInstance()!.appContext.config.globalProperties as T;
 }
 
-/* -------------------------------------------------------------------------- */
-/*                                   Hooks                                     */
-/* -------------------------------------------------------------------------- */
+/* --------------------------------- Hooks ---------------------------------- */
 
 /**
- * 检测网页整体是否处于暗色（`dark`）主题，响应式（`MutationObserver` 监听节点
- * `class` 变化，行为对齐原包 `useDark`，仅消费 `isDark` 时与 `@vueuse/core`
- * 的存储驱动实现不兼容，故自行实现）。
+ * `useDark(options?): DarkReturn` —— 响应式暗色主题：`MutationObserver` 监听 `html`（或 `body`）的 `class`
+ * 变化刷新 `isDark`，`toggleDark()` 切换类名；作用域销毁时自动停止监听
  */
 export const useDark = (options?: DarkOptions): DarkReturn => {
   const className = options?.className ?? "dark";
+  const el =
+    options?.selector === "body" ? document.body : document.documentElement;
   const isDark = shallowRef(false);
   let observer: MutationObserver | undefined;
 
-  const getEl = () =>
-    options?.selector
-      ? options.selector === "html"
-        ? document.documentElement
-        : document.body
-      : document.documentElement;
-
-  const updateStatus = () => {
-    isDark.value = getEl().classList.contains(className);
-  };
-
-  const toggleDark = () => {
-    getEl().classList.toggle(className);
-  };
-
-  if (getCurrentInstance()) {
-    onUnmounted(() => {
-      if (observer) {
-        observer.takeRecords();
-        observer.disconnect();
-      }
-    });
-  }
+  /** 同步一次当前主题状态 */
+  const updateStatus = () => (isDark.value = el.classList.contains(className));
 
   onBeforeMount(() => {
     updateStatus();
     observer = new MutationObserver(updateStatus);
-    observer.observe(getEl(), { attributes: true, attributeFilter: ["class"] });
+    observer.observe(el, { attributes: true, attributeFilter: ["class"] });
   });
 
-  return { isDark, toggleDark };
+  if (getCurrentScope()) {
+    onScopeDispose(() => observer?.disconnect());
+  }
+
+  return { isDark, toggleDark: () => el.classList.toggle(className) };
 };
 
-/** 将 ref / 选择器字符串统一解析为元素（内部实现） */
+/** 将 ref / getter / 组件实例 / CSS 选择器解析为元素数组，解析不到时为空数组（内部实现） */
 function resolveElement(target: unknown): HTMLElement[] {
-  const raw = toValue(target as any);
+  const raw = toValue(target as MaybeRefOrGetter<unknown>);
   if (isString(raw)) {
     return hasDocument ? Array.from(document.querySelectorAll(raw)) : [];
   }
-  const el = (raw as any)?.$el ?? raw;
+  // 组件实例取其根元素 `$el`，其余（元素本身等）原样使用
+  const instance = raw as { $el?: HTMLElement } | null | undefined;
+  const el = (instance?.$el ?? raw) as HTMLElement | undefined;
   return el ? [el] : [];
 }
 
 /**
- * 监听元素尺寸的变化，内置自定义防抖时长（默认 `40` 毫秒）。`immediate` 默认
- * `true`：挂载后立即用合成 entry 执行一次回调，此后每次尺寸变化经防抖后触发。
- * 支持元素 ref、CSS 选择器字符串及二者数组；组件实例销毁时自动停止监听。
- * 行为对齐原包 `useResizeObserver`（`@vueuse/core` 同名 Hook 不支持选择器
- * 字符串，故自行实现）。
+ * `useResizeObserver(target, callback, options?): { stop, restart }` —— 监听元素尺寸变化，回调经防抖触发（默认 40 毫秒）。
+ * `target` 支持元素 ref、CSS 选择器字符串及二者数组；`options.immediate`（默认 `true`）时挂载后立即以合成 entry
+ * 回调一次，并吞掉 `observe()` 自带的首帧通知。作用域销毁自动 `stop`，`restart` 用于停止后重新启用。
  */
 export function useResizeObserver(
   target:
@@ -735,6 +599,9 @@ export function useResizeObserver(
   let observer: ResizeObserver | null = null;
   /** `true` 表示观察回调可以执行；`immediate=true` 时首次观察回调仅用于消费初始触发 */
   let ready = !immediate;
+  let stopWatch: (() => void) | undefined;
+  /** 作用域已销毁：拦住排在 `nextTick` 里的首次 `restart`，避免建出无人清理的观察器 */
+  let disposed = false;
 
   const debouncedCallback = debounce(
     (entries: ResizeObserverEntry[], obs: ResizeObserver) => {
@@ -759,8 +626,6 @@ export function useResizeObserver(
       ? target.map(item => resolveElement(item)).flat()
       : resolveElement(target);
 
-  let stopWatch: (() => void) | undefined;
-
   /** （重新）启动监听，常用于停止监听后重新启用监听 */
   const restart = () => {
     if (!hasDocument) return;
@@ -769,49 +634,50 @@ export function useResizeObserver(
     stopWatch = watch(
       computed(resolveTargets),
       (els, _old, onCleanup) => {
-        if (window && els && els.length) {
+        if (els.length) {
           observer = new ResizeObserver(debouncedCallback);
           els.forEach(el => {
-            if (el) {
-              observer.observe(el, { box });
-              // immediate 模式下首次手动以合成 entry 执行一次回调
-              if (!ready) {
-                const rect = el.getBoundingClientRect();
-                const entry = {
-                  target: el,
-                  contentRect: rect,
-                  borderBoxSize: [
-                    { inlineSize: rect.width, blockSize: rect.height }
-                  ],
-                  contentBoxSize: [
-                    { inlineSize: rect.width, blockSize: rect.height }
-                  ],
-                  devicePixelContentBoxSize: [
-                    { inlineSize: rect.width, blockSize: rect.height }
-                  ]
-                } as unknown as ResizeObserverEntry;
-                callback([entry], observer);
-              }
+            observer.observe(el, { box });
+            // immediate 模式下首次手动以合成 entry 执行一次回调
+            if (!ready) {
+              const rect = el.getBoundingClientRect();
+              const entry = {
+                target: el,
+                contentRect: rect,
+                borderBoxSize: [
+                  { inlineSize: rect.width, blockSize: rect.height }
+                ],
+                contentBoxSize: [
+                  { inlineSize: rect.width, blockSize: rect.height }
+                ],
+                devicePixelContentBoxSize: [
+                  { inlineSize: rect.width, blockSize: rect.height }
+                ]
+              } as unknown as ResizeObserverEntry;
+              callback([entry], observer);
             }
           });
         }
         onCleanup(disconnect);
       },
-      { immediate: true, flush: "post", deep: true }
+      { immediate: true, flush: "post" }
     );
   };
 
   nextTick(() => {
-    restart();
+    if (!disposed) restart();
   });
 
   const stop = () => {
     disconnect();
-    if (stopWatch) stopWatch();
+    stopWatch?.();
   };
 
   if (getCurrentScope()) {
-    onScopeDispose(stop);
+    onScopeDispose(() => {
+      disposed = true;
+      stop();
+    });
   }
 
   return { stop, restart };
