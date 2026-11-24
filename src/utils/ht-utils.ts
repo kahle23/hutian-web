@@ -472,7 +472,7 @@ export const deviceDetection = (): boolean =>
 
 /* ---------------------------------- 存储 ---------------------------------- */
 
-/** `Storage` 代理：值统一经 JSON 序列化存取，兼容 `responsive-storage` 的存取格式（内部实现） */
+/** `Storage` 代理：值统一经 JSON 序列化存取，与 `ht-storage` 的存取格式一致（内部实现） */
 class LocalStorageProxy implements ProxyStorage {
   protected storage: Storage;
 

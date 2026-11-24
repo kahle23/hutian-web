@@ -59,9 +59,6 @@ importers:
       qs:
         specifier: ^6.14.0
         version: 6.14.0
-      responsive-storage:
-        specifier: ^2.2.0
-        version: 2.2.0
       sortablejs:
         specifier: ^1.15.6
         version: 1.15.6
@@ -2985,9 +2982,6 @@ packages:
   resolve-from@5.0.0:
     resolution: {integrity: sha512-qYg9KP24dD5qka9J47d0aVky0N+b4fTU89LN9iDnjB5waksiC49rvMB0PrUJQGoTmH50XPiqOvAjDfaijGxYZw==}
     engines: {node: '>=8'}
-
-  responsive-storage@2.2.0:
-    resolution: {integrity: sha512-94W5Chr2F5kDBT6J+OCOeJguEkSTDc3jPOUQXYmzNG64DCNl5p7hoBDF7bx7u6EXAEcpUKF64OZR4b7Nn8h/Gg==}
 
   restore-cursor@5.1.0:
     resolution: {integrity: sha512-oMA2dcrw6u0YfxJQXm342bFKX/E4sG9rbTzO9ptUcR/e8A33cHuvStiYOwH7fszkZlZ1z/ta9AAoPk2F4qIOHA==}
@@ -6390,8 +6384,6 @@ snapshots:
   resolve-from@4.0.0: {}
 
   resolve-from@5.0.0: {}
-
-  responsive-storage@2.2.0: {}
 
   restore-cursor@5.1.0:
     dependencies:

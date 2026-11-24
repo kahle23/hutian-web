@@ -15,8 +15,7 @@ const include = [
   "vue-tippy",
   "pinyin-pro",
   "sortablejs",
-  "@vueuse/core",
-  "responsive-storage"
+  "@vueuse/core"
 ];
 
 /**

@@ -132,7 +132,7 @@ declare global {
   }
 
   /**
-   * `responsive-storage` 本地响应式 `storage` 的类型声明
+   * 本地响应式 `storage`（ht-storage）的类型声明
    */
   interface ResponsiveStorage {
     locale: {
