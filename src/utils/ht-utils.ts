@@ -1,7 +1,6 @@
 /**
- * 壶天自研工具集（ht-utils）：项目早期对 docs/THIRD_PARTY_NOTICES.md 所列参考实现做的等价复写，
- * 命名与签名对齐参考实现，仅保留项目实际用到的部分；行为以参考实现为准，个别已知缺陷做了修正，
- * 差异在相应函数注释里注明。参考实现的类型声明存档于 docs/vendor-ref/。
+ * 壶天自研工具集（ht-utils）：项目自研的通用工具集，仅保留项目实际用到的部分，
+ * 个别实现细节在相应函数注释里注明。
  */
 
 import {
@@ -293,7 +292,7 @@ export function subAfter(val: string, character: string): string {
 
 /* ---------------------------------- 正则 ---------------------------------- */
 
-/** 链接正则（照搬原包） */
+/** 链接正则 */
 const urlReg = new RegExp(
   "^(?:(https?|ftp|rtsp|mms|ws|wss)://)?(?:\\S+(?::\\S*)?@)?(?:(?:localhost)|(?:[1-9]\\d{0,2}(?:\\.\\d{1,3}){3})|(?:\\[[0-9a-fA-F:]+\\])|(?:(?:[a-zA-Z0-9-_]+\\.)+[a-zA-Z]{2,63}))(?::\\d{1,5})?(?:[/?#]\\S*)?$",
   "i"
@@ -331,7 +330,7 @@ export function getKeyList(arr: any, key: string, duplicates = true): any[] {
 
 const hasDocument = typeof document !== "undefined";
 
-/** `hasClass(element, name): boolean` —— 元素是否含有类名 `name`（按完整类名匹配；原包按子串匹配，会误判同名前缀的类） */
+/** `hasClass(element, name): boolean` —— 元素是否含有类名 `name`（按完整类名匹配，避免误判同名前缀的类） */
 export const hasClass = (
   element: HTMLElement | Element,
   name: string
@@ -462,7 +461,7 @@ export function copyTextToClipboard(
   return isSuccess;
 }
 
-/** 移动端 UA 特征，7 条规则照搬原包 */
+/** 移动端 UA 特征（7 条规则） */
 const mobileUaReg =
   /midp|ucweb|android|iphone os|windows ce|rv:1.2.3.4|windows mobile/i;
 

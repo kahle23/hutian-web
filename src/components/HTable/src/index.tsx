@@ -1,8 +1,8 @@
 /**
- * HTable（壶天自研表格组件）：围绕 `el-table` 的薄封装，签名对齐 docs/THIRD_PARTY_NOTICES.md 所列参考实现。
+ * HTable（壶天自研表格组件）：围绕 `el-table` 的薄封装。
  * 拓展能力：`columns` 的 hide / slot / cellRenderer / children 等列属性、`pagination` 分页（回写页码与
  * 每页条数）、`adaptive` 自适应高度、`loading` 加载动画；未声明的属性与事件经 `$attrs` 透传给 `el-table`。
- * 对外暴露 getTableRef / getTableDoms / setAdaptive / setHeaderSticky。参考实现类型声明存档于 docs/vendor-ref/table-types/。
+ * 对外暴露 getTableRef / getTableDoms / setAdaptive / setHeaderSticky。
  */
 import {
   type PropType,
@@ -129,7 +129,7 @@ export default defineComponent({
       }px`;
     };
 
-    /** 表头吸顶（fixHeader !== false 时生效，行为对齐原包） */
+    /** 表头吸顶（fixHeader !== false 时生效） */
     const setHeaderSticky = async (zIndex = 3) => {
       await nextTick();
       const { tableHeaderRef, tableWrapper } = getTableDoms();
@@ -165,7 +165,7 @@ export default defineComponent({
       };
     });
 
-    /** 分页容器样式（行为对齐原包：宽度 100%、上下 16px、按 align 对齐） */
+    /** 分页容器样式（宽度 100%、上下 16px、按 align 对齐） */
     const paginationStyle = computed(() => {
       const { align, style } = props.pagination ?? {};
       return Object.assign(
@@ -202,7 +202,7 @@ export default defineComponent({
 
       if (typeof hide === "function" ? hide(attrs) : hide === true) return null;
 
-      /** 单元格/表头渲染器的公共入参，与原包 TableColumnRenderer 对齐 */
+      /** 单元格/表头渲染器的公共入参 */
       const withScope = (scope: any) => ({
         ...scope,
         index: scope.$index,
@@ -299,7 +299,7 @@ export default defineComponent({
         : contentNode;
     };
 
-    /** 行悬浮背景色与自适应高度的挂载逻辑（行为对齐原包） */
+    /** 行悬浮背景色与自适应高度的挂载逻辑 */
     const resizeHandler = debounce(
       setAdaptive,
       props.adaptiveConfig?.timeout ?? 60
@@ -334,7 +334,7 @@ export default defineComponent({
     });
 
     /**
-     * 显式暴露实例方法（行为对齐原包）。setup 仅返回 render 函数时若不调用
+     * 显式暴露实例方法。setup 仅返回 render 函数时若不调用
      * expose，模板 ref 拿到的实例上没有这些方法，`tableRef?.getTableRef()`
      * 这类模板表达式会在渲染期抛错并中断整个 flush 队列。
      */

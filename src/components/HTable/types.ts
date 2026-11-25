@@ -1,8 +1,7 @@
 /**
  * HTable 类型声明（壶天自研表格组件）
  *
- * 类型签名对齐原表格组件依赖（原包类型存档见
- * docs/vendor-ref/table-types/），仅保留 el-table 薄封装所需的面。
+ * 仅保留 el-table 薄封装所需的类型面。
  */
 import type { CSSProperties, VNode } from "vue";
 import type {
